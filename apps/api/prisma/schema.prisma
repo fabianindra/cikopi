@@ -10,12 +10,102 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User {
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  password          String
+  role              String  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  @@map("samples") // if you want to use snake_case format
+  product           Product[]
+  shift             Shift[]
+}
+
+model Shift {
+  id                Int       @id @default(autoincrement())
+  check_in_time     DateTime  @default(now())
+  check_out_time    DateTime  @updatedAt 
+  cash_balance_opening  Int
+  cash_balance_closing  Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  user              User     @relation(fields: [user_id], references: [id])
+  user_id           Int   
+
+  transaction       Transaction[]
+}
+
+model Product {
+  id                Int       @id @default(autoincrement())
+  product_name      String    @unique
+  price             Int   
+  stock             Int
+  category          String
+  image             String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  user              User     @relation(fields: [user_id], references: [id])
+  user_id           Int   
+  consignment       Consignment  @relation(fields: [consignment_id], references: [id])
+  consignment_id    Int   
+
+  TransactionUnit   TransactionUnit[]
+}
+
+model TransactionUnit {
+  id                Int       @id @default(autoincrement())
+  price             Int
+  quantity          String    
+  final_price       Int   
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  product           Product   @relation(fields: [product_id], references: [id])
+  product_id        Int   
+
+  transaction       Transaction[]
+}
+
+model Discount {
+  id                Int       @id @default(autoincrement())
+  discount_amount   Int    
+  start_date        DateTime
+  end_date          DateTime   
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  transaction       Transaction[]
+}
+
+model Consignment {
+  id                Int       @id @default(autoincrement())
+  partner           String
+  consignment_fee   Int 
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  product           Product[]
+}
+
+model Transaction {
+  id                Int       @id @default(autoincrement())
+  sub_total         Int    
+  tax               Int   
+  services          Int    
+  grand_total       Int   
+  payment_type      String
+  change            Int
+  transaction_date  DateTime  @default(now())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  transaction_unit  TransactionUnit   @relation(fields: [transaction_unit_id], references: [id])
+  transaction_unit_id        Int   
+  shift             Shift     @relation(fields: [shift_id], references: [id])
+  shift_id          Int   
+  discount          Discount  @relation(fields: [discount_id], references: [id])
+  discount_id       Int 
 }

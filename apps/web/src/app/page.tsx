@@ -1,95 +1,81 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+import { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { Box, Button, Text } from "@chakra-ui/react";
+import Cookies from 'js-cookie';
+import { User } from '@/types';
+import LoginForm from '@/components/LoginForm';
+import Nav from '@/components/Navbar';
 
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedUser = jwtDecode<User>(token);
+      setUser(decodedUser);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLoginSuccess = (token: string) => {
+    const decodedUser = jwtDecode<User>(token);
+    setIsLoggedIn(true);
+    setUser(decodedUser);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove('token');
+    setIsLoggedIn(false);
+    setUser(null);
+    window.location.href = '/';
+  };
+
+  const handleDashboard = () => {
+    window.location.href = '/dashboard'
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div>
+      <Nav />
+      <Box>
+        {isLoggedIn ? (
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            height="60vh"
+            width="100vw"
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+            <Button onClick={handleDashboard}>
+                Go to Dashboard
+            </Button>
+            <Button
+              colorScheme="primary"
+              onClick={handleLogout}
+              fontSize="md"
+              color='primary'
+            >
+              Logout
+            </Button>
+          </Box>
+        ) : (
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            height="60vh"
+            width="100vw"
+            boxSizing="border-box"
+          >
+            <LoginForm onLoginSuccess={handleLoginSuccess} />
+          </Box>
+        )}
+      </Box>
+    </div>
+  );
 }
