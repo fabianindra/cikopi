@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import authRouter from './routers/auth.router';
+import productRouter from './routers/product.router';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(
 );
 
 app.use('/api/auth', authRouter);
+app.use('/api/product', productRouter);
 
 const PORT = process.env.PORT || 6570;
 

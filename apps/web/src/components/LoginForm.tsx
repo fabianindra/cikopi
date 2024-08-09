@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Box, Text, Input, Button, FormControl, FormLabel, VStack, Heading } from "@chakra-ui/react";
 import Cookies from 'js-cookie';
 import { Login } from '@/api/auth';
+import { jwtDecode } from 'jwt-decode';
 
 interface LoginFormProps {
   onLoginSuccess: (token: string) => void;
@@ -19,12 +20,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
 
       if (response.status === 201 && response.data) {
         const userToken = response.data.token;
+        let role = '';
+        try {
+          const decodedToken: any = jwtDecode(userToken);
+          role = decodedToken.role;
+        } catch (decodeError) {
+          console.error('Token decoding failed', decodeError);
+          setError('Failed to decode token');
+          return;
+        }
 
         Cookies.set('token', userToken, { expires: 1 });
 
         onLoginSuccess(userToken);
         setError('');
-        window.location.href = '/dashboard';
+        if (role == "admin") {
+          window.location.href = '/dashboard-admin';
+        }
+        else {window.location.href = '/dashboard';}
       } else {
         setError('Login failed: Invalid response data');
       }
