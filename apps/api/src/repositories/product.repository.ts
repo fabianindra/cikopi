@@ -1,27 +1,13 @@
 import { PrismaClient } from '@prisma/client';
+import { GetProductsParams } from '@/types';
 
 const prisma = new PrismaClient();
-
-interface GetProductParams {
-  category: string;
-  search?: string;
-  page?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
-
-interface SearchProductsParams {
-  product_name: string;
-  page?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
 
 const buildProductWhereClause = ({
   category,
   search,
 }: {
-  category: string;
+  category?: string;
   search?: string;
 }) => {
   const whereClause: any = {
@@ -35,80 +21,26 @@ const buildProductWhereClause = ({
   return whereClause;
 };
 
-const countProducts = async (whereClause: any) => {
-  return await prisma.product.count({
-    where: whereClause,
-  });
-};
-
-const findProducts = async (
-  whereClause: any,
-  page: number,
-  pageSize: number,
-  sortBy: string = 'createdAt',
-  sortDirection: 'asc' | 'desc' = 'desc'
-) => {
-  return await prisma.product.findMany({
-    where: whereClause,
-    skip: page,
-    take: pageSize,
-    orderBy: {
-      [sortBy]: sortDirection,
-    },
-  });
-};
-
-//Get All Product
-export const repoGetAllProducts = async () => {
-  return await prisma.product.findMany({
-  });
-};
-
-//Get Product by Category
-export const repoGetProductsByCategory = async ({
+//Get Products
+export const repoGetProducts = async ({
   category,
   search,
-  page,
+  page = '1',
+  pageSize = '4',
   sortBy = 'createdAt',
   sortDirection = 'desc',
-}: GetProductParams) => {
-  const pageN = page ? (parseInt(page) - 1) * 4 : 0;
+}: GetProductsParams) => {
+  const pageN = parseInt(page) - 1;
+  const sizeN = parseInt(pageSize);
   const whereClause = buildProductWhereClause({ category, search });
 
-  const count = await countProducts(whereClause);
-  const allProducts = await findProducts(whereClause, pageN, 4, sortBy, sortDirection);
-
-  return {
-    count,
-    result: allProducts,
-  };
-};
-
-//search by name
-export const repoSearchProductsByName = async ({
-  product_name,
-  page,
-  sortBy,
-  sortDirection,
-}: SearchProductsParams) => {
-  const pageN = page ? (parseInt(page) - 1) * 4 : 0;
-  
-  const whereClause = {
-    product_name: {
-      contains: product_name,
-    },
-  };
-
-  const count = await prisma.product.count({
-    where: whereClause,
-  });
-
+  const count = await prisma.product.count({ where: whereClause });
   const products = await prisma.product.findMany({
     where: whereClause,
-    skip: pageN,
-    take: 4,
+    skip: pageN * sizeN,
+    take: sizeN,
     orderBy: {
-      [sortBy || 'createdAt']: sortDirection || 'desc',
+      [sortBy]: sortDirection,
     },
   });
 

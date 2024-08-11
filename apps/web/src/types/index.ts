@@ -34,6 +34,7 @@ export interface User {
     description?: string;
     active?: boolean;
     navSize: 'small' | 'large';
+    onClick?: () => void; 
   }
 
   export interface Product {
@@ -42,4 +43,11 @@ export interface User {
     price: number;
     image: string;
     category: string;
+}
+
+export interface FetchProductsParams {
+  page: number;
+  pageSize: number;
+  search?: string;
+  category?: string;
 }

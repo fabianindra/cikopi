@@ -1,65 +1,16 @@
-import { repoAddProduct, repoGetAllProducts, repoGetProductsByCategory, repoSearchProductsByName } from "@/repositories/product.repository";
+import { repoAddProduct, repoGetProducts } from "@/repositories/product.repository";
+import { AddProductRequest, ServiceGetProductsRequest } from "@/types";
 
-interface AddProductRequest {
-  product_name: string;
-  price: number;
-  stock: number;
-  category: string;
-  image: string;
-  userId: number;
-  partner?: string;
-  consignment_fee?: number;
-}
-
-interface ServiceGetProductsRequest {
-  params: {
-    category: string;
-  };
-  query: {
-    search?: string;
-    page?: string;
-    sortBy?: string;
-    sortDirection?: 'asc' | 'desc';
-  };
-}
-
-interface SearchProductsRequest {
-  product_name: string;
-  page?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
-
-//Get All Products
-export const serviceGetAllProducts = async () => {
-  try {
-    const data = await repoGetAllProducts();
-    return {
-      status: 200,
-      success: true,
-      message: 'Get all products success',
-      data: data
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      status: 500,
-      message: 'Server error',
-      error: (error as Error).message,
-    };
-  }
-};
-
-//Get Products by Category
-export const serviceGetProductsByCategory = async (req: ServiceGetProductsRequest) => {
-  const { category } = req.params;
-  const { search, page, sortBy, sortDirection } = req.query;
+export const serviceGetProducts = async (req: ServiceGetProductsRequest) => {
+  const { category } = req.params || {};
+  const { search, page, pageSize, sortBy, sortDirection } = req.query || {};
 
   try {
-    const data = await repoGetProductsByCategory({
+    const data = await repoGetProducts({
       category,
       search,
       page,
+      pageSize,
       sortBy,
       sortDirection,
     });
@@ -68,37 +19,6 @@ export const serviceGetProductsByCategory = async (req: ServiceGetProductsReques
       status: 200,
       success: true,
       message: 'Get products success',
-      data: data.result,
-      count: data.count,
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      status: 500,
-      message: 'Server error',
-      error: (error as Error).message,
-    };
-  }
-};
-
-export const serviceSearchProductsByName = async ({
-  product_name,
-  page,
-  sortBy,
-  sortDirection,
-}: SearchProductsRequest) => {
-  try {
-    const data = await repoSearchProductsByName({
-      product_name,
-      page,
-      sortBy,
-      sortDirection,
-    });
-
-    return {
-      status: 200,
-      success: true,
-      message: 'Search products success',
       data: data.result,
       count: data.count,
     };

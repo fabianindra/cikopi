@@ -7,10 +7,13 @@ const Products = () => {
   return (
     <Flex height="100vh">
       <Sidebar />
-      <Box flex="1">
-        <Flex alignItems="center" justifyContent="center" h="100%">
+      <Box flex="1" display="flex">
+        <Box flex="3" bg="none" m="4" p="4">
           <ProductListCashier />
-        </Flex>
+        </Box>
+        <Box flex="1" bg="none" m="4" p="4">
+          <Text>Transaction</Text>
+        </Box>
       </Box>
     </Flex>
   );

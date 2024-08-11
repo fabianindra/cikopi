@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { apiUrl } from './index';
+import { FetchProductsParams } from '@/types';
 
-export function fetchAllProduct() {
-  return axios.get(`${apiUrl}/product/get-all-products`);
+
+export function fetchProducts({ page, pageSize, search, category }: FetchProductsParams) {
+  return axios.get(`${apiUrl}/product/get-products`, {
+    params: { page, pageSize, search, category },
+  });
 }

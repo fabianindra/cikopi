@@ -1,11 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { fetchProducts } from "@/api/product";
-import ProductCard from './ProductCard';
-import { SimpleGrid, Box, Button, Flex, Text, Input, Select } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, Input, Select, Table, Thead, Tbody, Tr, Th, Td, Image } from '@chakra-ui/react';
 import { Product } from '@/types';
 
-const ProductListCashier = () => {
+const ProductListAdmin = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -60,13 +59,12 @@ const ProductListCashier = () => {
             <Box p={4}>
                 <Flex mb={4} justify="space-between">
                     <Input
-                        placeholder="Search"
+                        placeholder="Search by name"
                         value={searchTerm}
                         onChange={handleSearchChange}
                         width="60%"
-                        fontSize="sm"
                     />
-                    <Select placeholder="Category" onChange={handleCategoryChange} width="30%" fontSize="sm">
+                    <Select placeholder="Filter by category" onChange={handleCategoryChange} width="30%">
                         <option value="coffee">Coffee</option>
                         <option value="nonCoffee">Non Coffee</option>
                         <option value="pastry">Pastry</option>
@@ -74,19 +72,33 @@ const ProductListCashier = () => {
                 </Flex>
             </Box>
             <Box flex="1" overflowY="auto" p={4}>
-                <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
-                    {products.map(product => (
-                        <ProductCard
-                            key={product.id}
-                            id={product.id}
-                            name={product.product_name}
-                            price={product.price}
-                            dashboard={false}
-                            image={product.image}
-                            category={product.category}
-                        />
-                    ))}
-                </SimpleGrid>
+                <Table variant="simple">
+                    <Thead>
+                        <Tr>
+                            <Th>Image</Th>
+                            <Th>Name</Th>
+                            <Th>Category</Th>
+                            <Th isNumeric>Price</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {products.map(product => (
+                            <Tr key={product.id}>
+                                <Td>
+                                    <Image
+                                        boxSize="50px"
+                                        objectFit="cover"
+                                        src={product.image}
+                                        alt={product.product_name}
+                                    />
+                                </Td>
+                                <Td>{product.product_name}</Td>
+                                <Td>{product.category}</Td>
+                                <Td isNumeric>${product.price}</Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
             </Box>
             <Flex justify="center" align="center" mt={4} p={4} borderTop="1px solid #e2e8f0">
                 <Button onClick={handlePreviousPage} isDisabled={currentPage === 1} mr={2}>
@@ -101,4 +113,4 @@ const ProductListCashier = () => {
     );
 };
 
-export default ProductListCashier;
+export default ProductListAdmin;
