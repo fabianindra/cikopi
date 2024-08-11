@@ -35,3 +35,11 @@ export interface User {
     active?: boolean;
     navSize: 'small' | 'large';
   }
+
+  export interface Product {
+    id: number;
+    product_name: string;
+    price: number;
+    image: string;
+    category: string;
+}

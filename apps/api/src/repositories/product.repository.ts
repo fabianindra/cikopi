@@ -58,7 +58,13 @@ const findProducts = async (
   });
 };
 
-//Get Product
+//Get All Product
+export const repoGetAllProducts = async () => {
+  return await prisma.product.findMany({
+  });
+};
+
+//Get Product by Category
 export const repoGetProductsByCategory = async ({
   category,
   search,

@@ -37,7 +37,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
         if (role == "admin") {
           window.location.href = '/dashboard-admin';
         }
-        else {window.location.href = '/dashboard';}
+        else {window.location.href = '/dashboard-cashier';}
       } else {
         setError('Login failed: Invalid response data');
       }

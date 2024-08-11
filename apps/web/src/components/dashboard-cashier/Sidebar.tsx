@@ -58,10 +58,10 @@ const Sidebar: React.FC = () => {
           icon={<FiMenu />}
           onClick={toggleNavSize}
         />
-        <NavItem navSize={navSize} icon={FiHome} title="Dashboard" description="Cashier" {...getNavItemProps('/dashboard')} />
-        <NavItem navSize={navSize} icon={FiShoppingCart} title="Products" {...getNavItemProps('/dashboard/products')} />
-        <NavItem navSize={navSize} icon={FiClipboard} title="Report" {...getNavItemProps('/dashboard/report')} />
-        <NavItem navSize={navSize} icon={FiLogOut} title="Logout" {...getNavItemProps('/dashboard/logout')} />
+        <NavItem navSize={navSize} icon={FiHome} title="Dashboard" description="Cashier" {...getNavItemProps('/dashboard-cashier')} />
+        <NavItem navSize={navSize} icon={FiShoppingCart} title="Products" {...getNavItemProps('/dashboard-cashier/products')} />
+        <NavItem navSize={navSize} icon={FiClipboard} title="Report" {...getNavItemProps('/dashboard-cashier/report')} />
+        <NavItem navSize={navSize} icon={FiLogOut} title="Logout" {...getNavItemProps('/dashboard-cashier/logout')} />
       </Flex>
 
       <Flex

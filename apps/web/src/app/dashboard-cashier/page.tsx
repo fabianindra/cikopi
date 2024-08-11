@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { Box, Heading, Flex, Text, FormControl, FormLabel, Input, Button, VStack } from "@chakra-ui/react";
-import Sidebar from "@/components/Dashboard/Sidebar";
+import Sidebar from "@/components/dashboard-cashier/Sidebar";
 
 const Dashboard = () => {
   const [cashAmount, setCashAmount] = useState("");

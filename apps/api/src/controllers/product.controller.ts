@@ -1,4 +1,4 @@
-import { serviceAddProduct, serviceGetProductsByCategory, serviceSearchProductsByName } from '@/services/product.service';
+import { serviceAddProduct, serviceGetAllProducts, serviceGetProductsByCategory, serviceSearchProductsByName } from '@/services/product.service';
 import { Request, Response } from 'express';
 
 interface GetProductsByCategoryParams {
@@ -19,6 +19,24 @@ interface SearchProductsQuery {
   sortDirection?: 'asc' | 'desc';
 }
 
+//Get All Products
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const result = await serviceGetAllProducts();
+    return res.status(result.status).send(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: 500,
+      success: false,
+      message: 'Server error',
+      error: (error as Error).message,
+    });
+  }
+};
+
+
+//Get Products by Category
 export const getProductsByCategory = async (
   req: Request<GetProductsByCategoryParams, any, any, GetProductsByCategoryQuery>, 
   res: Response

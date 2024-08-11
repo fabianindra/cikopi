@@ -1,4 +1,4 @@
-import { repoAddProduct, repoGetProductsByCategory, repoSearchProductsByName } from "@/repositories/product.repository";
+import { repoAddProduct, repoGetAllProducts, repoGetProductsByCategory, repoSearchProductsByName } from "@/repositories/product.repository";
 
 interface AddProductRequest {
   product_name: string;
@@ -30,7 +30,27 @@ interface SearchProductsRequest {
   sortDirection?: 'asc' | 'desc';
 }
 
+//Get All Products
+export const serviceGetAllProducts = async () => {
+  try {
+    const data = await repoGetAllProducts();
+    return {
+      status: 200,
+      success: true,
+      message: 'Get all products success',
+      data: data
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      message: 'Server error',
+      error: (error as Error).message,
+    };
+  }
+};
 
+//Get Products by Category
 export const serviceGetProductsByCategory = async (req: ServiceGetProductsRequest) => {
   const { category } = req.params;
   const { search, page, sortBy, sortDirection } = req.query;
