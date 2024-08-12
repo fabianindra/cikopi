@@ -38,4 +38,22 @@ export interface AddProductRequest {
     sortBy?: string;
     sortDirection?: 'asc' | 'desc';
   }
+
+  export interface SubTotalRequest {
+    products: {
+      product_id: number;
+      quantity: number;
+    }[];
+    transactionData: {
+      sub_total: number;
+      tax: number;
+      services: number;
+      grand_total: number;
+      payment_type: string;
+      change: number;
+      shift_id: number;
+      discount_id?: number;
+    };
+  }
+  
   

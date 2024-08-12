@@ -19,7 +19,7 @@ const buildCashierWhereClause = ({
   }
   
   return whereClause;
-};
+}; 
 
 // Get Cashier
 export const repoGetCashier = async ({

@@ -65,8 +65,8 @@ model TransactionUnit {
 
   product           Product   @relation(fields: [product_id], references: [id])
   product_id        Int   
-
-  transaction       Transaction[]
+  transaction       Transaction  @relation(fields: [transaction_id], references: [id])
+  transaction_id    Int
 }
 
 model Discount {
@@ -102,10 +102,10 @@ model Transaction {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  transaction_unit  TransactionUnit   @relation(fields: [transaction_unit_id], references: [id])
-  transaction_unit_id        Int   
+  transaction_unit  TransactionUnit[]
+
   shift             Shift     @relation(fields: [shift_id], references: [id])
   shift_id          Int   
-  discount          Discount  @relation(fields: [discount_id], references: [id])
-  discount_id       Int 
+  discount          Discount?  @relation(fields: [discount_id], references: [id])
+  discount_id       Int? 
 }

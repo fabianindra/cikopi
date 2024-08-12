@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Image, Text } from "@chakra-ui/react";
 import Cookies from 'js-cookie';
 import { User } from '@/types';
 import LoginForm from '@/components/LoginForm';
@@ -35,8 +35,8 @@ export default function Home() {
   };
 
   const handleDashboard = () => {
-    window.location.href = '/dashboard'
-  }
+    window.location.href = '/dashboard';
+  };
 
   return (
     <div>
@@ -52,13 +52,13 @@ export default function Home() {
             width="100vw"
           >
             <Button onClick={handleDashboard}>
-                Go to Dashboard
+              Go to Dashboard
             </Button>
             <Button
               colorScheme="primary"
               onClick={handleLogout}
               fontSize="md"
-              color='primary'
+              color="primary"
             >
               Logout
             </Button>
@@ -73,7 +73,25 @@ export default function Home() {
             width="100vw"
             boxSizing="border-box"
           >
-            <LoginForm onLoginSuccess={handleLoginSuccess} />
+            <Text fontSize="md" fontFamily="monospace">
+              Please log in to continue
+            </Text>
+            <Box
+              display="flex"
+              flexDirection={{ base: "column", md: "row" }}
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+            >
+              <Image
+                src="/kopibiru.jpg"
+                alt="Coffee Picture"
+                boxSize={{ base: "100%", md: "50%" }}
+                objectFit="cover"
+                mr={{ md: 4 }}
+              />
+              <LoginForm onLoginSuccess={handleLoginSuccess} />
+            </Box>
           </Box>
         )}
       </Box>

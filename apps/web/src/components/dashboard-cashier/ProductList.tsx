@@ -1,11 +1,15 @@
-'use client';
+'use client'
 import React, { useEffect, useState } from 'react';
 import { fetchProducts } from "@/api/product";
 import ProductCard from './ProductCard';
 import { SimpleGrid, Box, Button, Flex, Text, Input, Select } from '@chakra-ui/react';
-import { Product } from '@/types';
+import { Product, ProductWithQuantity } from '@/types';
 
-const ProductListCashier = () => {
+interface ProductListCashierProps {
+  onBuy: (product: ProductWithQuantity, quantity: number) => void;
+}
+
+const ProductListCashier: React.FC<ProductListCashierProps> = ({ onBuy }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -81,9 +85,9 @@ const ProductListCashier = () => {
                             id={product.id}
                             name={product.product_name}
                             price={product.price}
-                            dashboard={false}
                             image={product.image}
                             category={product.category}
+                            onBuy={onBuy}
                         />
                     ))}
                 </SimpleGrid>

@@ -51,3 +51,24 @@ export interface FetchProductsParams {
   search?: string;
   category?: string;
 }
+
+export interface ProductWithQuantity extends Product {
+  quantity?: number;
+}
+
+export interface TransactionFormProps {
+  transaction: ProductWithQuantity[];
+  onQuantityChange: (productId: number, quantity: number) => void;
+  onDelete: (productId: number) => void;
+}
+
+export interface PaymentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  totalAmount: number;
+  paymentType: string;
+  setPaymentType: (type: string) => void;
+  cashAmount: number | '';
+  setCashAmount: (amount: number | '') => void;
+  transaction: ProductWithQuantity[];
+}

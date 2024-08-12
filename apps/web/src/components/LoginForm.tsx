@@ -50,12 +50,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
     <div>
     <Box p={6} color="primary">
       <VStack spacing={4}>
-        <Heading as="h3" size="sm" mb={10} color="primary">
-          Please login to continue
-        </Heading>
         {error && <Text color="red.300">{error}</Text>}
         <FormControl id="username">
-          <FormLabel fontSize="xs">Username</FormLabel>
+          <FormLabel fontSize="sm" color="black">Username</FormLabel>
           <Input
             type="text"
             value={username}
@@ -69,7 +66,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
         </FormControl>
 
         <FormControl id="password">
-          <FormLabel fontSize="xs">Password</FormLabel>
+          <FormLabel fontSize="sm" color="black">Password</FormLabel>
           <Input
             type="password"
             value={password}
@@ -82,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
           />
         </FormControl>
 
-        <Button fontSize="xs" width="full" colorScheme="blue" onClick={handleLogin}>
+        <Button mt={8} fontSize="xs" width="full" bgColor="tertiary" onClick={handleLogin}>
           Log in
         </Button>
       </VStack>

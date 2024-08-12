@@ -7,8 +7,7 @@ const DashboardAdmin = () => {
     const [adminName, setAdminName] = useState("Admin");
 
     useEffect(() => {
-        // Assume this fetches the admin's name
-        setAdminName("John Doe");
+        setAdminName("Admin");
     }, []);
 
     return (

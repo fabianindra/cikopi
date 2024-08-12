@@ -54,6 +54,10 @@ const ProductListAdmin = () => {
         setCurrentPage(1);
     };
 
+    const formatRupiah = (amount: number) => {
+        return amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+    };
+
     return (
         <Flex direction="column" height="100%">
             <Box p={4}>
@@ -94,7 +98,7 @@ const ProductListAdmin = () => {
                                 </Td>
                                 <Td>{product.product_name}</Td>
                                 <Td>{product.category}</Td>
-                                <Td isNumeric>${product.price}</Td>
+                                <Td isNumeric>{formatRupiah(product.price)}</Td>
                             </Tr>
                         ))}
                     </Tbody>

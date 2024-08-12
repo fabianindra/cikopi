@@ -5,7 +5,7 @@ import NextLink from 'next/link';
 export const Footer = () => {
   return (
     <div>
-    <Box as="footer" bg="white" color="primary" py={6}>
+    <Box as="footer" bg="tertiary" color="black" py={6}>
       <Container maxW="container.sm">
         <Stack spacing={4} align="center" textAlign="center">
           <Stack spacing={3} direction={{ base: 'column', md: 'row' }} justify="center">

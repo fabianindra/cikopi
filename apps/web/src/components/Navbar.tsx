@@ -54,7 +54,7 @@ export default function Nav() {
         py={{ base: '4', md: '6', lg: '8' }} 
       >
         <NextLink href="/">
-            <Heading textAlign="start" color="primary" as="h2" size="lg">
+            <Heading textAlign="start" color="tertiary" as="h2" size="lg">
               Cikopi
             </Heading>
         </NextLink>
@@ -64,11 +64,10 @@ export default function Nav() {
               <Text fontWeight="semibold" fontSize="xs">{user.username}</Text>
               <Button 
                 onClick={handleLogout} 
-                colorScheme="white" 
                 fontSize="2xs" 
                 color="primary" 
                 border="2px solid"
-                borderColor="primary"
+                bgColor="tertiary"
               >
                 Logout
               </Button>
@@ -82,7 +81,7 @@ export default function Nav() {
               height="40px"
               borderRadius="full"
               border="2px solid"
-              borderColor="primary"
+              borderColor="tertiary"
               backgroundColor="white"
               fontWeight="semibold"
               textAlign="center"

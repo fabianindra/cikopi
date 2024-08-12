@@ -56,7 +56,7 @@ const SidebarAdmin: React.FC = () => {
       justifyContent="space-between"
       zIndex="1000"
       pointerEvents="auto"
-      bgColor="travertine"
+      bgColor="tertiary"
     >
       <Flex
         p="5%"
