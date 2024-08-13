@@ -2,14 +2,21 @@
 import { useState, useEffect } from 'react';
 import { Box, Text, Input, Button, FormControl, FormLabel, VStack, Flex } from "@chakra-ui/react";
 import Cookies from 'js-cookie';
-import { CheckIn } from '@/api/shift';
+import { CheckOut } from '@/api/shift';
 import { jwtDecode } from 'jwt-decode';
+import { User } from '@/types'
 
-const CheckInPage = () => {
+const CheckOutPage = () => {
   const [cashAmount, setCashAmount] = useState('');
   const [error, setError] = useState('');
   const [userId, setUserId] = useState<number | null>(null);
+  const [shiftId, setShiftId] = useState<number | null>(null);
   const token = Cookies.get('token');
+  const shift = Cookies.get('shift');
+
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+
 
   useEffect(() => {
     if (token) {
@@ -24,37 +31,43 @@ const CheckInPage = () => {
     }
   }, [token]);
 
+  useEffect(() => {
+    if (shift) {
+      try {
+        const decodedShift: any = jwtDecode(shift);
+        console.log('Decoded Shift:', decodedShift);
+        setShiftId(decodedShift.id);
+      } catch (e) {
+        console.error('Failed to decode shift:', e);
+        setError('Invalid shift');
+      }
+    }
+  }, [shift]);
+
   const handleCashAmountSubmit = async () => {
     console.log('Cash Amount:', cashAmount);
     console.log('User ID:', userId);
-  
+    console.log('Shift ID:', shiftId);
+
     try {
-      if (userId !== null) {
-        const response = await CheckIn(cashAmount, userId);
+      if (userId !== null && shiftId !== null) {
+        const response = await CheckOut(cashAmount, userId, shiftId);
 
         if (response.status === 201) {
-          if (response && response.token) {
-            Cookies.set('shift', response.token, { expires: 1 });
-          } else {
-            throw new Error('Token not found in response');
-          }
-
-          window.location.href = '/dashboard-cashier/products';
+            Cookies.remove('token');
+            setLoggedIn(false);
+            setUser(null);
+            window.location.href = '/';
         } else {
           setError('Failed to submit cash amount');
-          Cookies.remove('token');
-          Cookies.remove('shift');
-        //   window.location.href = '/';
+          window.location.href = '/dashboard-cashier/products';
         }
-      } else {
-        setError('User ID is not available');
       }
     } catch (error: any) {
       console.error('API call error:', error);
       setError(error.response?.data?.message || 'Failed to submit cash amount');
       Cookies.remove('token');
-      Cookies.remove('shift');
-    //   window.location.href = '/';
+      window.location.href = '/';
     }
   };
 
@@ -86,4 +99,4 @@ const CheckInPage = () => {
   );
 };
 
-export default CheckInPage;
+export default CheckOutPage;

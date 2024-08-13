@@ -2,9 +2,15 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const repoFindUser = async (username: any) => {
+export const repoFindUser = async (username: string) => {
     return await prisma.user.findUnique({
       where: { username },
+    });
+  };
+
+  export const repoFindUserById = async (userId: number) => {
+    return await prisma.user.findUnique({
+      where: { id: userId },
     });
   };
 

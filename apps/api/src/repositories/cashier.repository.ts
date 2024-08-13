@@ -48,3 +48,18 @@ export const repoGetCashier = async ({
     result: cashiers,
   };
 };
+
+//Add Cashier
+export const repoAddCashier = async ({
+    username, password
+  }: {
+    username: string,
+    password: string
+  }) => {
+      await prisma.user.create({
+        data: {
+          username: username,
+          password: password,
+          role: "cashier",
+    }});
+  };

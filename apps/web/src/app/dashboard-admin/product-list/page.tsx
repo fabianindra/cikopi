@@ -1,6 +1,7 @@
 import { Box, Heading, Flex, Text } from "@chakra-ui/react";
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
 import ProductListAdmin from "@/components/dashboard-admin/ProductListAdmin";
+import AddProductForm from "@/components/dashboard-admin/AddProductForm";
 
 const ProductAdmin = () => {
   return (
@@ -11,7 +12,7 @@ const ProductAdmin = () => {
           <ProductListAdmin />
         </Box>
         <Box flex="1" bg="none" m="4" p="4">
-          <Text>Add New Product</Text>
+          <AddProductForm />
         </Box>
       </Box>
     </Flex>

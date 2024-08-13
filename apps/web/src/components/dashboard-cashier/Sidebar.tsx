@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { useState } from 'react';
-import { Flex, IconButton, Divider } from '@chakra-ui/react';
+import { Flex, IconButton, Divider, Box, Text } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
 import { FiMenu, FiHome, FiShoppingCart, FiClipboard, FiLogOut } from 'react-icons/fi';
 import NavItem from './NavItem';
@@ -36,10 +36,7 @@ const Sidebar: React.FC = () => {
   });
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    setLoggedIn(false);
-    setUser(null);
-    window.location.href = '/';
+    window.location.href = '/logout/checkout';
   };
 
   return (
@@ -72,7 +69,31 @@ const Sidebar: React.FC = () => {
           icon={<FiMenu />}
           onClick={toggleNavSize}
         />
-        <NavItem navSize={navSize} icon={FiHome} title="Dashboard" description="Cashier" {...getNavItemProps('/dashboard-cashier')} />
+
+        <Flex
+          mt={2}
+          mb={10}
+          flexDir="column"
+          p={3}
+          borderRadius={8}
+        >
+          <Text
+            ml={5}
+            display={navSize === 'small' ? 'none' : 'flex'}
+            color="black"
+            fontWeight="bold"
+          >
+            Dashboard
+          </Text>
+          <Text
+            ml={5}
+            display={navSize === 'small' ? 'none' : 'flex'}
+            color="gray.600"
+          >
+            Cashier
+          </Text>
+        </Flex>
+
         <NavItem navSize={navSize} icon={FiShoppingCart} title="Products" {...getNavItemProps('/dashboard-cashier/products')} />
         <NavItem navSize={navSize} icon={FiClipboard} title="Report" {...getNavItemProps('/dashboard-cashier/report')} />
         <NavItem

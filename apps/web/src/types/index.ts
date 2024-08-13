@@ -73,3 +73,33 @@ export interface PaymentModalProps {
   setCashAmount: (amount: number | '') => void;
   transaction: ProductWithQuantity[];
 }
+
+export interface Cashier {
+  id: string;
+  username: string;
+  role: string;
+  createdAt: Date;
+}
+
+
+export interface CashierCardProps {
+  id: string;
+  username: string;
+  role: string;
+  createdAt: Date;
+}
+export interface GetCashiersParams {
+  search?: string;
+  page?: string;
+  pageSize?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+
+export interface CheckInResponse {
+  status: number;
+  success: boolean;
+  message: string;
+  token?: string;
+}
