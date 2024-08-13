@@ -6,6 +6,7 @@ import path from 'path';
 import authRouter from './routers/auth.router';
 import productRouter from './routers/product.router';
 import transactionRouter from './routers/transaction.router';
+import shiftRouter from './routers/shift.router';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(
 app.use('/api/auth', authRouter);
 app.use('/api/product', productRouter);
 app.use('/api/transaction', transactionRouter);
+app.use('/api/shift', shiftRouter);
 
 const PORT = process.env.PORT || 6570;
 

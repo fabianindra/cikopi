@@ -3,6 +3,7 @@ import { IconType } from 'react-icons';
 export interface User {
     username: string;
     role: string;
+    userId?: number
   }
 
   export interface HeaderProps {

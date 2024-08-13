@@ -37,7 +37,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
         if (role == "admin") {
           window.location.href = '/dashboard-admin';
         }
-        else {window.location.href = '/dashboard-cashier';}
+        else {window.location.href = '/checkin';}
       } else {
         setError('Login failed: Invalid response data');
       }
@@ -79,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
           />
         </FormControl>
 
-        <Button mt={8} fontSize="xs" width="full" bgColor="tertiary" onClick={handleLogin}>
+        <Button mt={4} fontSize="xs" width="full" bgColor="tertiary" onClick={handleLogin}>
           Log in
         </Button>
       </VStack>

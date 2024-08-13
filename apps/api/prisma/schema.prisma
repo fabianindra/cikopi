@@ -27,7 +27,7 @@ model Shift {
   check_in_time     DateTime  @default(now())
   check_out_time    DateTime  @updatedAt 
   cash_balance_opening  Int
-  cash_balance_closing  Int
+  cash_balance_closing  Int?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
