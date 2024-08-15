@@ -125,3 +125,12 @@ export interface ProductData {
   total_transaction: number;
   total_amount: number;
 }
+
+export interface ShiftData {
+  shiftId: number;
+  user: string;
+  cash_balance_opening: number;
+  cash_balance_closing: number;
+  totalPrice: number;
+  cash_balance_check: number;
+}

@@ -1,5 +1,5 @@
 import { sign } from 'jsonwebtoken';
-import { repoCheckIn, repoCheckOut, repoFindShift, repoGetShiftReport } from "@/repositories/shift.repository";
+import { repoCashCheck, repoCheckIn, repoCheckOut, repoFindShift, repoGetShiftReport } from "@/repositories/shift.repository";
 import { repoFindUser, repoFindUserById } from '../repositories/auth.repository';
 
 const createToken = (payload: object, expiresIn: string): string => {
@@ -84,6 +84,26 @@ const createToken = (payload: object, expiresIn: string): string => {
         status: 500,
         success: false,
         message: `Failed to retrieve shift report: ${error.message}`,
+      };
+    }
+  };
+
+  export const serviceCashCheck = async (date: Date) => {
+    try {
+      const transactions = await repoCashCheck(date);
+  
+      return {
+        status: 200,
+        success: true,
+        data: transactions,
+        message: 'Cash check successfully retrieved',
+      };
+    } catch (error: any) {
+      console.error(error);
+      return {
+        status: 500,
+        success: false,
+        message: `Failed to retrieve cash check: ${error.message}`,
       };
     }
   };

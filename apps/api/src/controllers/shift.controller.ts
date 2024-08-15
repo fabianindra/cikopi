@@ -1,4 +1,4 @@
-import { serviceCheckIn, serviceCheckOut, serviceGetShiftReport } from '@/services/shift.services';
+import { serviceCashCheck, serviceCheckIn, serviceCheckOut, serviceGetShiftReport } from '@/services/shift.services';
 import { Request, Response } from 'express';
 
 export const checkIn = async (req: Request, res: Response) => {
@@ -59,3 +59,33 @@ export const checkOut = async (req: Request, res: Response) => {
       });
     }
   };
+
+
+  export const cashCheck = async (req: Request, res: Response) => {
+    try {
+      const { date } = req.query;
+  
+      if (!date) {
+        return res.status(400).send({
+          status: 400,
+          success: false,
+          message: 'Date query parameter is required',
+        });
+      }
+  
+      const parsedDate = new Date(date as string);
+  
+      const result = await serviceCashCheck(parsedDate);
+  
+      return res.status(result.status).send(result);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        status: 500,
+        success: false,
+        message: 'Server error',
+        error: (error as Error).message,
+      });
+    }
+  };
+  

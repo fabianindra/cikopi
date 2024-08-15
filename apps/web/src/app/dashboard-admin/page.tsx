@@ -1,16 +1,12 @@
 "use client";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
-import Cookies from "js-cookie";
 import TransactionReport from "@/components/dashboard-admin/TransactionReport";
 import ShiftReport from "@/components/dashboard-admin/ShiftReport";
 import ProductTransactionReport from "@/components/dashboard-admin/ProductReport";
+import CashCheck from "@/components/dashboard-admin/CashCheck";
 
 const DashboardAdmin = () => {
-  const adminName = "Admin";
-
-  console.log(Cookies.get("token"));
-
   return (
     <Flex height="100vh" direction={{ base: "column", md: "row" }}>
       <SidebarAdmin />
@@ -31,7 +27,7 @@ const DashboardAdmin = () => {
         </Box>
         <Box bg="none" p="4">
         <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Cash Check</Text>
-
+          <CashCheck />
         </Box>
         <Box bg="none" p="4">
           <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Total Product Sales</Text>

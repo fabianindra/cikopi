@@ -24,4 +24,8 @@ export function CheckOut( cashAmount: string, userId: number, shiftId: number ) 
     });
   }
   
-  
+  export function getCashCheck(date: string) {
+    return axios.get(`${apiUrl}/shift/cash-check`, {
+      params: { date: date }
+    });
+  }
