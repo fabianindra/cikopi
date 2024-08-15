@@ -35,8 +35,7 @@ const CheckOutPage = () => {
     if (shift) {
       try {
         const decodedShift: any = jwtDecode(shift);
-        console.log('Decoded Shift:', decodedShift);
-        setShiftId(decodedShift.id);
+        setShiftId(decodedShift.shiftId);
       } catch (e) {
         console.error('Failed to decode shift:', e);
         setError('Invalid shift');
@@ -66,8 +65,7 @@ const CheckOutPage = () => {
     } catch (error: any) {
       console.error('API call error:', error);
       setError(error.response?.data?.message || 'Failed to submit cash amount');
-      Cookies.remove('token');
-      window.location.href = '/';
+      window.location.href = '/dashboard-cashier/products';
     }
   };
 

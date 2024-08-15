@@ -36,7 +36,7 @@ const Sidebar: React.FC = () => {
   });
 
   const handleLogout = () => {
-    window.location.href = '/logout/checkout';
+    window.location.href = 'logout/checkout';
   };
 
   return (

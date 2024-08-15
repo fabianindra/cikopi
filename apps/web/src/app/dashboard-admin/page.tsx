@@ -2,6 +2,7 @@
 import { Box, Heading, Flex, Text, Button, VStack, HStack, SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 const DashboardAdmin = () => {
     const [adminName, setAdminName] = useState("Admin");
@@ -9,6 +10,8 @@ const DashboardAdmin = () => {
     useEffect(() => {
         setAdminName("Admin");
     }, []);
+
+    console.log(Cookies.get("token"))
 
     return (
         <Flex height="100vh">

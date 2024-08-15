@@ -1,3 +1,6 @@
+import { JwtPayload } from 'jsonwebtoken';
+import { Request } from 'express';
+
 export interface AddProductRequest {
     product_name: string;
     price: number;
@@ -56,4 +59,9 @@ export interface AddProductRequest {
     };
   }
   
+  declare module 'express-serve-static-core' {
+    interface Request {
+      user?: string | JwtPayload;
+    }
+  }
   
