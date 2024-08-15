@@ -1,16 +1,16 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, useToast, Heading } from "@chakra-ui/react";
-import { addProduct } from '@/api/product';
-import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { addProduct } from '@/api/product';
 
 const AddProductForm = () => {
   const [product_name, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
   const [category, setCategory] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState<File | null>(null);
   const [partner, setPartner] = useState('');
   const [consignment_fee, setConsignmentFee] = useState('');
   const [userId, setUserId] = useState<number | null>(null);
@@ -28,20 +28,27 @@ const AddProductForm = () => {
     }
   }, []);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append('product_name', product_name);
+    formData.append('price', price);
+    formData.append('stock', stock);
+    formData.append('category', category);
+    if (image) formData.append('image', image);
+    formData.append('userId', userId!.toString());
+    if (partner) formData.append('partner', partner);
+    if (consignment_fee) formData.append('consignment_fee', consignment_fee);
+
     try {
-      const response = await addProduct({
-        product_name,
-        price: parseFloat(price),
-        stock: parseInt(stock),
-        category,
-        image,
-        userId: userId!,
-        partner: partner || undefined,
-        consignment_fee: consignment_fee ? parseFloat(consignment_fee) : undefined,
-      });
+      const response = await addProduct(formData);
 
       if (response.status === 201) {
         toast({
@@ -55,10 +62,10 @@ const AddProductForm = () => {
         setPrice('');
         setStock('');
         setCategory('');
-        setImage('');
+        setImage(null);
         setPartner('');
         setConsignmentFee('');
-        window.location.href = '/dashboard-admin/product-management';
+        window.location.href = '/dashboard-admin/product-list';
       }
     } catch (error) {
       toast({
@@ -73,9 +80,9 @@ const AddProductForm = () => {
 
   return (
     <Box as="form" onSubmit={handleSubmit} maxWidth="400px" mx="auto" p="4" borderWidth="1px" borderRadius="md">
-         <Heading mb={6} size="md" color="primary" textAlign="center">
-            Add New Product
-        </Heading>
+      <Heading mb={6} size="md" color="primary" textAlign="center">
+        Add New Product
+      </Heading>
 
       <FormControl id="product_name" isRequired mb="3">
         <FormLabel fontSize="sm">Product Name</FormLabel>
@@ -120,11 +127,11 @@ const AddProductForm = () => {
       </FormControl>
 
       <FormControl id="image" isRequired mb="3">
-        <FormLabel fontSize="sm">Image URL</FormLabel>
+        <FormLabel fontSize="sm">Product Image</FormLabel>
         <Input
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          placeholder="Enter image URL"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
           fontSize="sm"
         />
       </FormControl>

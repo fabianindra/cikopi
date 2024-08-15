@@ -91,3 +91,34 @@ export const repoGetTransactionByDate = async (date: Date) => {
       },
     });
   };
+
+  export const repoGetTransactionAdmin = async (startDate: Date, endDate: Date, category?: string, sortBy: string = 'transaction_date', sortDirection: 'asc' | 'desc' = 'asc') => {
+    return await prisma.transaction.findMany({
+      where: {
+        transaction_date: {
+          gte: startDate,
+          lte: endDate,
+        },
+        ...(category && {
+          transaction_unit: {
+            some: {
+              product: {
+                category,
+              },
+            },
+          },
+        }),
+      },
+      include: {
+        transaction_unit: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        [sortBy]: sortDirection,
+      },
+    });
+  };
+  

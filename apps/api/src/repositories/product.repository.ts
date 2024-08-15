@@ -10,9 +10,10 @@ const buildProductWhereClause = ({
   category?: string;
   search?: string;
 }) => {
-  const whereClause: any = {
-    category: category,
-  };
+  const whereClause: any = {};
+  if (category) {
+    whereClause.category = category;
+  }
   if (search) {
     whereClause.product_name = {
       contains: search,
@@ -21,7 +22,6 @@ const buildProductWhereClause = ({
   return whereClause;
 };
 
-//Get Products
 export const repoGetProducts = async ({
   category,
   search,
@@ -50,7 +50,6 @@ export const repoGetProducts = async ({
   };
 };
 
-//Add Product
 export const repoAddProduct = async ({
   product_name,
   price,
@@ -85,11 +84,11 @@ export const repoAddProduct = async ({
 
     await tx.product.create({
       data: {
-        product_name: product_name,
-        price: price,
-        stock: stock,
-        category: category,
-        image: image,
+        product_name,
+        price,
+        stock,
+        category,
+        image,
         user: { connect: { id: userId } },
         ...(consignmentId ? { consignment: { connect: { id: consignmentId } } } : {}),
       },

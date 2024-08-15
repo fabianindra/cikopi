@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts } from "@/api/product";
 import { Box, Button, Flex, Text, Input, Select, Table, Thead, Tbody, Tr, Th, Td, Image } from '@chakra-ui/react';
 import { Product } from '@/types';
+import { imageUrl } from '@/api/index';
 
 const ProductListAdmin = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -89,10 +90,10 @@ const ProductListAdmin = () => {
                         {products.map(product => (
                             <Tr key={product.id}>
                                 <Td>
-                                    <Image
+                                <Image
                                         boxSize="50px"
                                         objectFit="cover"
-                                        src={product.image}
+                                        src={`${imageUrl}/${product.image}`}
                                         alt={product.product_name}
                                     />
                                 </Td>

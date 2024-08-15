@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { serviceGetTransactionByDate, serviceGetTransactionDetails, serviceSubTotal } from "@/services/transaction.service";
+import { serviceGetTransactionAdmin, serviceGetTransactionByDate, serviceGetTransactionDetails, serviceSubTotal } from "@/services/transaction.service";
 
 export const handleSubTotalTransaction = async (req: Request, res: Response) => {
   try {
@@ -68,3 +68,33 @@ export const handleGetTransactionByDate = async (req: Request, res: Response) =>
       });
     }
   };
+
+  export const handleGetTransactionAdmin = async (req: Request, res: Response) => {
+    try {
+      const { startDate, endDate, category, sortBy = 'transaction_date', sortDirection = 'asc' } = req.query;
+  
+      if (!startDate || !endDate) {
+        return res.status(400).send({
+          status: 400,
+          success: false,
+          message: 'Start and end date query parameters are required',
+        });
+      }
+  
+      const parsedStartDate = new Date(startDate as string);
+      const parsedEndDate = new Date(endDate as string);
+  
+      const result = await serviceGetTransactionAdmin(parsedStartDate, parsedEndDate, category as string, sortBy as string, sortDirection as 'asc' | 'desc');
+  
+      return res.status(result.status).send(result);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        status: 500,
+        success: false,
+        message: 'Server error',
+        error: (error as Error).message,
+      });
+    }
+  };
+  

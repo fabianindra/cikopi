@@ -33,6 +33,7 @@ export const serviceGetProducts = async (req: ServiceGetProductsRequest) => {
   }
 };
 
+
 export const serviceAddProduct = async (request: AddProductRequest) => {
   const {
     product_name,
@@ -42,28 +43,38 @@ export const serviceAddProduct = async (request: AddProductRequest) => {
     image,
     userId,
     partner,
-    consignment_fee
+    consignment_fee,
   } = request;
+
+  // Basic validation
+  if (!product_name || !price || !stock || !category || !image || !userId) {
+    return {
+      status: 400,
+      success: false,
+      message: 'Missing required fields',
+    };
+  }
 
   try {
     const data = await repoAddProduct({
       product_name,
-      price,
-      stock,
+      price: Number(price), // Ensure it's a number
+      stock: Number(stock),  // Ensure it's a number
       category,
       image,
-      userId,
-      partner,
-      consignment_fee,
+      userId: Number(userId), // Ensure it's a number
+      partner: partner || undefined,
+      consignment_fee: consignment_fee ? Number(consignment_fee) : undefined,
     });
 
     return {
       status: 201,
       success: true,
-      message: 'Add product success',
+      message: 'Product added successfully',
       data,
     };
   } catch (error: any) {
+    console.error('Error adding product:', error.message, error.stack);
     return {
       status: 500,
       success: false,

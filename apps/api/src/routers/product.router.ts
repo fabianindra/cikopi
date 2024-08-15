@@ -1,9 +1,10 @@
 import { addProduct, getProducts } from '@/controllers/product.controller';
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import { upload } from '@/middleware/uploader';
 
 const productRouter = Router();
 
 productRouter.get('/get-products', getProducts);
-productRouter.post('/add-product', addProduct);
+productRouter.post('/add-product', upload.single('image'), addProduct);
 
 export default productRouter;

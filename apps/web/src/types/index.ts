@@ -103,3 +103,10 @@ export interface CheckInResponse {
   message: string;
   token?: string;
 }
+
+export interface Transaction {
+  id: number;
+  transaction_date: string;
+  category: string;
+  grand_total: number;
+}

@@ -9,7 +9,7 @@ export const getProducts = async (req: Request, res: Response) => {
     });
     return res.status(result.status).send(result);
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching products:', error);
     return res.status(500).send({
       status: 500,
       success: false,
@@ -20,16 +20,33 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 export const addProduct = async (req: Request, res: Response) => {
-    try {
-      const result = await serviceAddProduct(req.body);
-      return res.status(result.status).send(result);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({
-        status: 500,
-        success: false,
-        message: 'Server error',
-        error: (error as Error).message,
-      });
-    }
-  };
+  try {
+    // Handle file upload
+    const imageFilename = req.file?.filename || ''; // Get the filename of the uploaded image
+
+    // Extract other fields from req.body, which is already parsed by multer
+    const { product_name, price, stock, category, userId, partner, consignment_fee } = req.body;
+
+    // Call the service with the parsed data
+    const result = await serviceAddProduct({
+      product_name,
+      price: Number(price),
+      stock: Number(stock),
+      category,
+      image: imageFilename, // Use only the filename
+      userId: Number(userId),
+      partner: partner || undefined,
+      consignment_fee: consignment_fee ? Number(consignment_fee) : undefined,
+    });
+
+    return res.status(result.status).send(result);
+  } catch (error) {
+    console.error('Error adding product:', error);
+    return res.status(500).send({
+      status: 500,
+      success: false,
+      message: 'Failed to add product',
+      error: (error as Error).message,
+    });
+  }
+};
