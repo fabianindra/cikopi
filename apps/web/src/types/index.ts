@@ -110,3 +110,18 @@ export interface Transaction {
   category: string;
   grand_total: number;
 }
+
+export interface ShiftReportData {
+  user: string;
+  cash_balance_opening: number;
+  cash_balance_closing: number;
+  total_transactions: number;
+  date: string;
+}
+
+export interface ProductData {
+  product_name: string;
+  total_quantity: number;
+  total_transaction: number;
+  total_amount: number;
+}

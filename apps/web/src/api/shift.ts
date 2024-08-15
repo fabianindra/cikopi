@@ -15,3 +15,13 @@ export function CheckOut( cashAmount: string, userId: number, shiftId: number ) 
     return axios.post(`${apiUrl}/shift/checkout`, { cashAmount, userId, shiftId });
   }
   
+  export function getShiftReport(startDate: string, endDate: string) {
+    return axios.get(`${apiUrl}/shift/get-report`, {
+      params: {
+        startDate,
+        endDate,
+      },
+    });
+  }
+  
+  

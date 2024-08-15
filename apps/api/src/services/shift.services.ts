@@ -1,5 +1,5 @@
 import { sign } from 'jsonwebtoken';
-import { repoCheckIn, repoCheckOut, repoFindShift } from "@/repositories/shift.repository";
+import { repoCheckIn, repoCheckOut, repoFindShift, repoGetShiftReport } from "@/repositories/shift.repository";
 import { repoFindUser, repoFindUserById } from '../repositories/auth.repository';
 
 const createToken = (payload: object, expiresIn: string): string => {
@@ -58,3 +58,33 @@ const createToken = (payload: object, expiresIn: string): string => {
       };
     }
   };
+
+
+  export const serviceGetShiftReport = async (startDate: Date, endDate: Date) => {
+    try {
+      const shifts = await repoGetShiftReport(startDate, endDate);
+  
+      const report = shifts.map(shift => ({
+        user: shift.user.username,
+        cash_balance_opening: shift.cash_balance_opening,
+        cash_balance_closing: shift.cash_balance_closing,
+        date: shift.createdAt,
+        total_transactions: shift.transaction.reduce((total, txn) => total + txn.grand_total, 0),
+      }));
+  
+      return {
+        status: 200,
+        success: true,
+        data: report,
+        message: 'Shift report successfully retrieved',
+      };
+    } catch (error: any) {
+      console.error(error);
+      return {
+        status: 500,
+        success: false,
+        message: `Failed to retrieve shift report: ${error.message}`,
+      };
+    }
+  };
+  

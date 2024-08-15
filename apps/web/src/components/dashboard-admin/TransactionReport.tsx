@@ -2,48 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
-  Button,
-  HStack,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Select,
-  SimpleGrid,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
+  Box, Button, HStack, Input, InputGroup, InputRightElement, Select, SimpleGrid, Table, Thead, Tbody, Tr, Th, Td, Modal,
+  ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, VStack, Divider, Flex
 } from '@chakra-ui/react';
-import {
-  MagnifyingGlass,
-  SortAscending,
-  SortDescending,
-} from '@phosphor-icons/react/dist/ssr';
+import { MagnifyingGlass,SortAscending, SortDescending } from '@phosphor-icons/react/dist/ssr';
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { getTransactionAdmin } from '@/api/transaction';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { getTransactionAdmin, getTransactionDetails } from '@/api/transaction';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend );
 
 const TransactionReport = () => {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -52,6 +19,8 @@ const TransactionReport = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [category, setCategory] = useState<string>('');
+  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -70,6 +39,21 @@ const TransactionReport = () => {
     setSortDirection((prevDirection) =>
       prevDirection === 'asc' ? 'desc' : 'asc'
     );
+  };
+
+  const handleTransactionClick = async (transactionId: number) => {
+    try {
+      const response = await getTransactionDetails(transactionId);
+      setSelectedTransaction(response.data.data);
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error('Error fetching transaction details:', err);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTransaction(null);
   };
 
   const chartData = {
@@ -158,6 +142,7 @@ const TransactionReport = () => {
           </Button>
         </HStack>
       </HStack>
+
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
         <Box height="300px">
           <Line data={chartData} options={chartOptions} />
@@ -166,17 +151,18 @@ const TransactionReport = () => {
           <Table variant="simple" size="sm">
             <Thead>
               <Tr>
-                <Th fontSize="sm">ID</Th>
-                <Th fontSize="sm">Category</Th>
                 <Th fontSize="sm">Total</Th>
                 <Th fontSize="sm">Date</Th>
               </Tr>
             </Thead>
             <Tbody>
               {transactions.map((transaction) => (
-                <Tr key={transaction.id}>
-                  <Td fontSize="sm">{transaction.id}</Td>
-                  <Td fontSize="sm">{transaction.category}</Td>
+                <Tr
+                  key={transaction.id}
+                  onClick={() => handleTransactionClick(transaction.id)}
+                  cursor="pointer"
+                  _hover={{ bg: 'gray.100' }}
+                >
                   <Td fontSize="sm">{transaction.grand_total}</Td>
                   <Td fontSize="sm">{new Date(transaction.transaction_date).toLocaleDateString()}</Td>
                 </Tr>
@@ -185,6 +171,39 @@ const TransactionReport = () => {
           </Table>
         </Box>
       </SimpleGrid>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ModalOverlay />
+        <ModalContent maxWidth="sm" mx={4}>
+          <ModalCloseButton />
+          <ModalBody>
+            {selectedTransaction ? (
+              <VStack spacing={4} align="stretch">
+                <Text fontWeight="bold" fontSize="lg" textAlign="center" mt={10}>Transaction Details</Text>
+                <Divider />
+                {selectedTransaction.map((item: any) => (
+                  <Flex key={item.id} justify="space-between">
+                    <Box>
+                      <Text fontSize="md">{item.quantity} x</Text>
+                      <Text fontSize="md">{new Date(item.createdAt).toLocaleString()}</Text>
+                    </Box>
+                    <Text fontSize="md">Rp. {item.final_price}</Text>
+                  </Flex>
+                ))}
+                <Divider />
+                <Text fontWeight="bold" fontSize="md" textAlign="right">
+                  Total: Rp. {selectedTransaction.reduce((acc: number, item: any) => acc + item.final_price, 0)}
+                </Text>
+              </VStack>
+            ) : (
+              <Text>Loading...</Text>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button bgColor="tertiary" onClick={closeModal}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

@@ -36,3 +36,9 @@ export function getTransactionByDate(date: string) {
       },
     });
   }
+
+  export function getProductReport(date: string) {
+    return axios.get(`${apiUrl}/transaction/get-by-product`, {
+      params: { date: date }
+    });
+  }

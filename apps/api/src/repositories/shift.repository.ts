@@ -34,3 +34,22 @@ export const repoFindShift = async (shift_id: number) => {
       },
     });
   };
+
+  export const repoGetShiftReport = async (startDate: Date, endDate: Date) => {
+    return await prisma.shift.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        user: true,
+        transaction: {
+          select: {
+            grand_total: true,
+          },
+        },
+      },
+    });
+  };

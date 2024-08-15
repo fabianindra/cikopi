@@ -1,12 +1,10 @@
 "use client";
-import {
-  Box,
-  Flex,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
 import Cookies from "js-cookie";
 import TransactionReport from "@/components/dashboard-admin/TransactionReport";
+import ShiftReport from "@/components/dashboard-admin/ShiftReport";
+import ProductTransactionReport from "@/components/dashboard-admin/ProductReport";
 
 const DashboardAdmin = () => {
   const adminName = "Admin";
@@ -14,15 +12,30 @@ const DashboardAdmin = () => {
   console.log(Cookies.get("token"));
 
   return (
-    <Flex height="100vh">
+    <Flex height="100vh" direction={{ base: "column", md: "row" }}>
       <SidebarAdmin />
-      <Box flex="1" display="flex">
-        <Box flex="2" bg="none" m="4" p="4">
-          <Text ml={10}>Welcome, here's your report:</Text>
+      <Box
+        flex="1"
+        display="grid"
+        gridTemplateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(2, 1fr)", xl: "repeat(2, 1fr)" }}
+        gridGap="4"
+        p="4"
+      >
+        <Box bg="none" p="4">
+        <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Report</Text>
+          <ShiftReport />
+        </Box>
+        <Box bg="none" p="4">
+        <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Transaction Report</Text>
           <TransactionReport />
         </Box>
-        <Box flex="1" bg="none" m="4" p="4">
-          <Text>Else</Text>
+        <Box bg="none" p="4">
+        <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Cash Check</Text>
+
+        </Box>
+        <Box bg="none" p="4">
+          <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Total Product Sales</Text>
+          <ProductTransactionReport />
         </Box>
       </Box>
     </Flex>
