@@ -46,9 +46,10 @@ const CheckOutPage = () => {
   }, [shift]);
 
   const handleCashAmountSubmit = async () => {
-    console.log('Cash Amount:', cashAmount);
-    console.log('User ID:', userId);
-    console.log('Shift ID:', shiftId);
+    const confirmation = window.confirm("Are you sure you want to submit this cash amount?");
+    if (!confirmation) {
+      return;
+    }
 
     try {
       if (userId !== null && shiftId !== null) {
@@ -71,10 +72,14 @@ const CheckOutPage = () => {
     }
   };
 
+  const handleBack = () => {
+    window.location.href = '/dashboard-cashier/products';
+  };
+
   return (
     <Flex direction="column" minHeight="100vh">
     <Nav />
-    <Flex height="70vh" alignItems="center" justifyContent="center">
+    <Flex flex="1" alignItems="center" justifyContent="center">
       <Box p={4} maxWidth="300px" width="full" color="primary">
         <VStack spacing={3}>
           {error && <Text color="red.300" fontSize="xs">{error}</Text>}
@@ -96,6 +101,9 @@ const CheckOutPage = () => {
             Submit
           </Button>
         </VStack>
+        <Button mt={6} fontSize="xs" width="full" bgColor="secondary" onClick={handleBack}>
+            Back to Dashboard
+          </Button>
       </Box>
       </Flex>
       <Footer />

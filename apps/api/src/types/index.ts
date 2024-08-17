@@ -13,15 +13,13 @@ export interface AddProductRequest {
   }
   
   export interface ServiceGetProductsRequest {
-    params?: {
-      category?: string;
-    };
     query?: {
       search?: string;
       page?: string;
       pageSize?: string;
       sortBy?: string;
       sortDirection?: 'asc' | 'desc';
+      category?: string;
     };
   }
 
@@ -58,6 +56,18 @@ export interface AddProductRequest {
       discount_id?: number;
     };
   }
+
+  export type EditProductRequest = {
+    product_name?: string;
+    price?: number | string;
+    stock?: number | string;
+    category?: string;
+    image?: string;
+    userId?: number | string;
+    partner?: string;
+    consignment_fee?: number | string;
+  };
+  
   
   declare module 'express-serve-static-core' {
     interface Request {

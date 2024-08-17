@@ -10,6 +10,7 @@ const buildCashierWhereClause = ({
 }) => {
   const whereClause: any = {
     role: 'cashier', 
+    isDeleted: false,
   };
   
   if (search) {
@@ -21,7 +22,6 @@ const buildCashierWhereClause = ({
   return whereClause;
 }; 
 
-// Get Cashier
 export const repoGetCashier = async ({
   search,
   page = '1',
@@ -49,7 +49,7 @@ export const repoGetCashier = async ({
   };
 };
 
-//Add Cashier
+
 export const repoAddCashier = async ({
     username, password
   }: {
@@ -63,3 +63,41 @@ export const repoAddCashier = async ({
           role: "cashier",
     }});
   };
+
+
+  export const repoEditCashier = async ({
+    userId,
+    username,
+    password,
+  }: {
+    userId: string;
+    username: string;
+    password: string;
+  }) => {
+  
+    await prisma.user.update({
+      where: {
+        id: Number(userId),
+      },
+      data: {
+        username: username,
+        password: password,
+      },
+    });
+  };
+  
+  export const repoDeleteCashier = async ({
+    userId
+  }: {
+    userId: string;
+  }) => {
+    await prisma.user.update({
+      where: {
+        id: Number(userId),
+      },
+      data: {
+        isDeleted: true
+      },
+    });
+  };
+  

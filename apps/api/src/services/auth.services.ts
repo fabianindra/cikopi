@@ -21,7 +21,7 @@ export const serviceUserLogin = async (request: any) => {
   
       if (existingUser) {
         const jwtPayload = { username, role: existingUser.role, userid: existingUser.id };
-        const token = createToken(jwtPayload, '1h');
+        const token = createToken(jwtPayload, '9h');
         
         return {
           status: 201,

@@ -1,4 +1,4 @@
-import { repoAddCashier, repoGetCashier } from '@/repositories/cashier.repository'; 
+import { repoAddCashier, repoDeleteCashier, repoEditCashier, repoGetCashier } from '@/repositories/cashier.repository'; 
 import { GetCashiersParams } from '@/types';
 import bcrypt from 'bcrypt';
 
@@ -36,3 +36,32 @@ export const serviceAddCashier = async ({
       password: hashedPassword,
     });
   };
+
+  export const serviceEditCashier = async ({
+    userId,
+    username,
+    password,
+  }: {
+    userId: string;
+    username: string;
+    password: string;
+  }) => {
+    const hashedPassword = await bcrypt.hash(password, 10);
+  
+    await repoEditCashier({
+      userId,
+      username,
+      password: hashedPassword,
+    });
+  };
+
+  export const serviceDeleteCashier = async ({
+    userId,
+  }: {
+    userId: string;
+  }) => {
+    await repoDeleteCashier({
+      userId
+    });
+  };
+

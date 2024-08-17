@@ -25,11 +25,15 @@ export const repoSubTotal = async ({
     products.map(async ({ product_id, quantity }) => {
       const product = await prisma.product.findUnique({
         where: { id: product_id },
-        select: { price: true },
+        select: { price: true, isDeleted: true },
       });
 
       if (!product) {
         throw new Error(`Product with ID ${product_id} not found`);
+      }
+
+      if (product.isDeleted) { 
+        throw new Error(`Product with ID ${product_id} is deleted and cannot be used in the transaction`);
       }
 
       const price = product.price;

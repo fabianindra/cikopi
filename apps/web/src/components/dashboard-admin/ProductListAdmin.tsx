@@ -1,9 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { fetchProducts } from "@/api/product";
+import { fetchProducts, deleteProduct } from "@/api/product"; // Ensure deleteProduct is imported
 import { Box, Button, Flex, Text, Input, Select, Table, Thead, Tbody, Tr, Th, Td, Image } from '@chakra-ui/react';
 import { Product } from '@/types';
 import { imageUrl } from '@/api/index';
+import EditProductModal from './EditProductModal';
+import { debounce } from 'lodash';
 
 const ProductListAdmin = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -11,11 +13,13 @@ const ProductListAdmin = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('');
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     const pageSize = 8;
 
     useEffect(() => {
-        const getProducts = async () => {
+        const debouncedFetchProducts = debounce(async () => {
             try {
                 const result = await fetchProducts({
                     page: currentPage,
@@ -29,8 +33,13 @@ const ProductListAdmin = () => {
             } catch (error) {
                 console.log(error);
             }
+        }, 600);
+
+        debouncedFetchProducts();
+
+        return () => {
+            debouncedFetchProducts.cancel();
         };
-        getProducts();
     }, [currentPage, searchTerm, category]);
 
     const handleNextPage = () => {
@@ -60,13 +69,33 @@ const ProductListAdmin = () => {
     };
 
     const handleEditProduct = (productId: number) => {
-        // sini gan
-        console.log(`Edit product with ID: ${productId}`);
+        const product = products.find(p => p.id === productId);
+        if (product) {
+            setSelectedProduct(product);
+            setIsEditModalOpen(true);
+        }
     };
 
-    const handleDeleteProduct = (productId: number) => {
-        // sini gan
-        console.log(`Edit product with ID: ${productId}`);
+    const handleSaveProduct = (updatedProduct: Product) => {
+        setProducts(prevProducts =>
+            prevProducts.map(p => p.id === updatedProduct.id ? updatedProduct : p)
+        );
+        window.location.href = '/dashboard-admin/product-list';
+    };
+
+    const handleDeleteProduct = async (productId: number) => {
+        const confirmed = window.confirm('Are you sure you want to delete this product?');
+        if (confirmed) {
+            try {
+                await deleteProduct(productId);
+                setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
+                console.log(`Deleted product with ID: ${productId}`);
+            } catch (error) {
+                console.log('Failed to delete product:', error);
+            }
+        } else {
+            console.log('Delete action was canceled.');
+        }
     };
 
     return (
@@ -94,6 +123,11 @@ const ProductListAdmin = () => {
                             <Th>Name</Th>
                             <Th>Category</Th>
                             <Th isNumeric>Price</Th>
+                            <Th>Stock</Th>
+                            <Th>Partner</Th>
+                            <Th>Fee %</Th>
+                            <Th>Edit</Th>
+                            <Th>Delete</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -110,6 +144,9 @@ const ProductListAdmin = () => {
                                 <Td>{product.product_name}</Td>
                                 <Td>{product.category}</Td>
                                 <Td isNumeric>{formatRupiah(product.price)}</Td>
+                                <Td>{product.stock}</Td>
+                                <Td>{product.partner}</Td>
+                                <Td>{product.consignment_fee ? `${product.consignment_fee}%` : 'N/A'}</Td>
                                 <Td>
                                     <Button
                                         bgColor="secondary"
@@ -124,7 +161,7 @@ const ProductListAdmin = () => {
                                         bgColor="maroon"
                                         color="travertine"
                                         size="sm"
-                                        onClick={() => handleDeleteProduct(product.id)}
+                                        onClick={() => handleDeleteProduct(product.id)} // Call the delete function
                                     >
                                         Delete
                                     </Button>
@@ -143,6 +180,13 @@ const ProductListAdmin = () => {
                     Next
                 </Button>
             </Flex>
+
+            <EditProductModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                product={selectedProduct}
+                onSave={handleSaveProduct}
+            />
         </Flex>
     );
 };

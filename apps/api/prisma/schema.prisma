@@ -15,6 +15,7 @@ model User {
   username          String    @unique
   password          String
   role              String  
+  isDeleted         Boolean?   @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -44,7 +45,7 @@ model Product {
   stock             Int
   category          String
   image             String
-  // isDeleted         Boolean   @default()
+  isDeleted         Boolean?   @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 

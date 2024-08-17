@@ -4,6 +4,7 @@ import { fetchProducts } from "@/api/product";
 import ProductCard from './ProductCard';
 import { SimpleGrid, Box, Button, Flex, Text, Input, Select } from '@chakra-ui/react';
 import { Product, ProductWithQuantity } from '@/types';
+import { debounce } from 'lodash';
 
 interface ProductListCashierProps {
   onBuy: (product: ProductWithQuantity, quantity: number) => void;
@@ -19,7 +20,7 @@ const ProductListCashier: React.FC<ProductListCashierProps> = ({ onBuy }) => {
     const pageSize = 8;
 
     useEffect(() => {
-        const getProducts = async () => {
+        const debouncedFetchProducts = debounce(async () => {
             try {
                 const result = await fetchProducts({
                     page: currentPage,
@@ -33,8 +34,13 @@ const ProductListCashier: React.FC<ProductListCashierProps> = ({ onBuy }) => {
             } catch (error) {
                 console.log(error);
             }
+        }, 300);
+
+        debouncedFetchProducts();
+
+        return () => {
+            debouncedFetchProducts.cancel();
         };
-        getProducts();
     }, [currentPage, searchTerm, category]);
 
     const handleNextPage = () => {

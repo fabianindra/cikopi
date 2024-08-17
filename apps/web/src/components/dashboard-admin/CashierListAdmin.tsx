@@ -1,9 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { fetchCashiers } from "@/api/cashier";
+import { fetchCashiers, deleteCashier, editCashier } from "@/api/cashier";
 import CashierCard from './CashierCard';
+import CashierEditModal from './CashierEditModal';
 import { SimpleGrid, Box, Button, Flex, Text, Input, Select } from '@chakra-ui/react';
 import { Cashier, GetCashiersParams } from '@/types';
+import { debounce } from 'lodash';
 
 const CashierListAdmin: React.FC = () => {
     const [cashiers, setCashiers] = useState<Cashier[]>([]);
@@ -11,11 +13,13 @@ const CashierListAdmin: React.FC = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('');
+    const [selectedCashier, setSelectedCashier] = useState<Cashier | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const pageSize = 8;
 
     useEffect(() => {
-        const getCashiers = async () => {
+        const debouncedFetchCashiers = debounce(async () => {
             try {
                 const params: GetCashiersParams = {
                     page: currentPage.toString(),
@@ -26,15 +30,19 @@ const CashierListAdmin: React.FC = () => {
                 };
 
                 const result = await fetchCashiers(params);
-                console.log(result.data);
-                const cashiersData = result.data.data.result;
+                const cashiersData = result.data.data.data.result;
                 setCashiers(Array.isArray(cashiersData) ? cashiersData : []);
                 setTotalPages(Math.ceil((result.data.data.count || 0) / pageSize));
             } catch (error) {
                 console.log(error);
             }
+        }, 600); 
+
+        debouncedFetchCashiers();
+
+        return () => {
+            debouncedFetchCashiers.cancel();
         };
-        getCashiers();
     }, [currentPage, searchTerm, sortBy]);
 
     const handleNextPage = () => {
@@ -58,6 +66,39 @@ const CashierListAdmin: React.FC = () => {
         setSortBy(e.target.value);
         setCurrentPage(1);
     };
+
+    const handleEdit = (id: string) => {
+        const cashierToEdit = cashiers.find(cashier => cashier.id === id) || null;
+        setSelectedCashier(cashierToEdit);
+        setIsEditModalOpen(true);
+    };
+
+    const handleSaveEdit = async (id: string, username: string, password: string) => {
+        try {
+            await editCashier(id, username, password);
+            setCashiers(prevCashiers =>
+                prevCashiers.map(cashier =>
+                    cashier.id === id
+                        ? { ...cashier, username }
+                        : cashier
+                )
+            );
+            setIsEditModalOpen(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteCashier(id);
+            setCashiers(prevCashiers => prevCashiers.filter(cashier => cashier.id !== id));
+            console.log(`Deleted cashier with id: ${id}`);
+        } catch (error) {
+            console.log(error);
+        }
+};
+
 
     return (
         <Flex direction="column" height="100%">
@@ -85,6 +126,8 @@ const CashierListAdmin: React.FC = () => {
                             username={cashier.username}
                             role={cashier.role}
                             createdAt={cashier.createdAt}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
                         />
                     ))}
                 </SimpleGrid>
@@ -98,6 +141,17 @@ const CashierListAdmin: React.FC = () => {
                     Next
                 </Button>
             </Flex>
+
+            {selectedCashier && (
+                <CashierEditModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    id={selectedCashier.id}
+                    currentUsername={selectedCashier.username}
+                    currentRole={selectedCashier.role}
+                    onSave={handleSaveEdit}
+                />
+            )}
         </Flex>
     );
 };

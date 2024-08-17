@@ -30,7 +30,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
           return;
         }
 
-        Cookies.set('token', userToken, { expires: 1 });
+        Cookies.set('token', userToken, { expires: 8/24 });
 
         onLoginSuccess(userToken);
         setError('');

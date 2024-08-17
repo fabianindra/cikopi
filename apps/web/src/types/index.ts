@@ -44,6 +44,9 @@ export interface User {
     price: number;
     image: string;
     category: string;
+    stock: number;
+    partner?: string;
+    consignment_fee?: number;
 }
 
 export interface FetchProductsParams {
@@ -81,13 +84,15 @@ export interface Cashier {
   createdAt: Date;
 }
 
-
 export interface CashierCardProps {
   id: string;
   username: string;
   role: string;
   createdAt: Date;
+  onEdit: (id: string) => void; 
+  onDelete: (id: string) => Promise<void>; 
 }
+
 export interface GetCashiersParams {
   search?: string;
   page?: string;
@@ -133,4 +138,11 @@ export interface ShiftData {
   cash_balance_closing: number;
   totalPrice: number;
   cash_balance_check: number;
+}
+
+export interface EditProductModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  product: Product | null;
+  onSave: (updatedProduct: Product) => void;
 }

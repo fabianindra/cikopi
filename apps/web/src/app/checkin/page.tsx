@@ -27,6 +27,11 @@ const CheckInPage = () => {
   }, [token]);
 
   const handleCashAmountSubmit = async () => {
+    const confirmation = window.confirm("Are you sure you want to submit this cash amount?");
+    if (!confirmation) {
+      return;
+    }
+
     console.log('Cash Amount:', cashAmount);
     console.log('User ID:', userId);
   
@@ -36,7 +41,7 @@ const CheckInPage = () => {
 
         if (response.status === 201) {
           if (response && response.token) {
-            Cookies.set('shift', response.token, { expires: 1 });
+            Cookies.set('shift', response.token, { expires: 8/24 });
           } else {
             throw new Error('Token not found in response');
           }
@@ -63,7 +68,7 @@ const CheckInPage = () => {
   return (
     <Flex direction="column" minHeight="100vh">
       <Nav />
-      <Flex height="70vh" alignItems="center" justifyContent="center">
+      <Flex flex="1" alignItems="center" justifyContent="center">
         <Box p={4} maxWidth="300px" width="full" color="primary">
           <VStack spacing={3}>
             {error && <Text color="red.300" fontSize="xs">{error}</Text>}
