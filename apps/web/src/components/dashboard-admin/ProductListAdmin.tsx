@@ -59,6 +59,16 @@ const ProductListAdmin = () => {
         return amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
     };
 
+    const handleEditProduct = (productId: number) => {
+        // sini gan
+        console.log(`Edit product with ID: ${productId}`);
+    };
+
+    const handleDeleteProduct = (productId: number) => {
+        // sini gan
+        console.log(`Edit product with ID: ${productId}`);
+    };
+
     return (
         <Flex direction="column" height="100%">
             <Box p={4}>
@@ -90,7 +100,7 @@ const ProductListAdmin = () => {
                         {products.map(product => (
                             <Tr key={product.id}>
                                 <Td>
-                                <Image
+                                    <Image
                                         boxSize="50px"
                                         objectFit="cover"
                                         src={`${imageUrl}/${product.image}`}
@@ -100,6 +110,25 @@ const ProductListAdmin = () => {
                                 <Td>{product.product_name}</Td>
                                 <Td>{product.category}</Td>
                                 <Td isNumeric>{formatRupiah(product.price)}</Td>
+                                <Td>
+                                    <Button
+                                        bgColor="secondary"
+                                        size="sm"
+                                        onClick={() => handleEditProduct(product.id)}
+                                    >
+                                        Edit
+                                    </Button>
+                                </Td>
+                                <Td>
+                                    <Button
+                                        bgColor="maroon"
+                                        color="travertine"
+                                        size="sm"
+                                        onClick={() => handleDeleteProduct(product.id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </Td>
                             </Tr>
                         ))}
                     </Tbody>

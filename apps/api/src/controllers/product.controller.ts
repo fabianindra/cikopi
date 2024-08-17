@@ -21,19 +21,15 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const addProduct = async (req: Request, res: Response) => {
   try {
-    // Handle file upload
-    const imageFilename = req.file?.filename || ''; // Get the filename of the uploaded image
-
-    // Extract other fields from req.body, which is already parsed by multer
+    const imageFilename = req.file?.filename || '';
     const { product_name, price, stock, category, userId, partner, consignment_fee } = req.body;
 
-    // Call the service with the parsed data
     const result = await serviceAddProduct({
       product_name,
       price: Number(price),
       stock: Number(stock),
       category,
-      image: imageFilename, // Use only the filename
+      image: imageFilename,
       userId: Number(userId),
       partner: partner || undefined,
       consignment_fee: consignment_fee ? Number(consignment_fee) : undefined,

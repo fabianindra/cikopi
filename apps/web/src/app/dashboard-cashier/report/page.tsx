@@ -16,9 +16,16 @@ const Report = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const date = new Date().toISOString().split("T")[0];
-        const response = await getTransactionByDate(date);
+        const date = new Date();
+        const currentTimezoneOffsetInHours = date.getTimezoneOffset() / 60;
+        const gmtPlus7Offset = 7;
+        date.setHours(date.getHours() + (gmtPlus7Offset - currentTimezoneOffsetInHours));
+        const adjustedDate = date.toISOString().split("T")[0];
+
+        const response = await getTransactionByDate(adjustedDate);
+        
         const fetchedTransactions = response.data.data;
+
         setTransactions(fetchedTransactions);
         setTotalDailyTransaction(
           fetchedTransactions.reduce((acc: number, transaction: any) => acc + transaction.grand_total, 0)

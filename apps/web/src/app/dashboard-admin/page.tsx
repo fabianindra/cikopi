@@ -1,5 +1,5 @@
 "use client";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
 import TransactionReport from "@/components/dashboard-admin/TransactionReport";
 import ShiftReport from "@/components/dashboard-admin/ShiftReport";
@@ -10,29 +10,42 @@ const DashboardAdmin = () => {
   return (
     <Flex height="100vh" direction={{ base: "column", md: "row" }}>
       <SidebarAdmin />
-      <Box
-        flex="1"
-        display="grid"
-        gridTemplateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(2, 1fr)", xl: "repeat(2, 1fr)" }}
-        gridGap="4"
-        p="4"
-      >
-        <Box bg="none" p="4">
-        <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Report</Text>
-          <ShiftReport />
-        </Box>
-        <Box bg="none" p="4">
-        <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Transaction Report</Text>
-          <TransactionReport />
-        </Box>
-        <Box bg="none" p="4">
-        <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Cash Check</Text>
-          <CashCheck />
-        </Box>
-        <Box bg="none" p="4">
-          <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Total Product Sales</Text>
-          <ProductTransactionReport />
-        </Box>
+      <Box flex="1" p="10">
+        <Tabs variant="soft-rounded">
+          <TabList>
+            <Tab>Shift Report</Tab>
+            <Tab>Transaction Report</Tab>
+            <Tab>Shift Cash Check</Tab>
+            <Tab>Total Product Sales</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <Box p="4">
+                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Report</Text>
+                <ShiftReport />
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <Box p="4">
+                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Transaction Report</Text>
+                <TransactionReport />
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <Box p="4">
+                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Cash Check</Text>
+                <CashCheck />
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <Box p="4">
+                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Total Product Sales</Text>
+                <ProductTransactionReport />
+              </Box>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Box>
     </Flex>
   );

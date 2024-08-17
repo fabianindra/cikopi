@@ -1,19 +1,12 @@
 'use client'
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import { User } from "@/types"
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
 import Cookies from "js-cookie";
 
 
 const Logout = () => {
-    const [loggedIn, setLoggedIn] = useState<boolean>(false);
-    const [user, setUser] = useState<User | null>(null);
-
     const handleLogout = () => {
         Cookies.remove('token');
-        setLoggedIn(false);
-        setUser(null);
         window.location.href = '/';
       };
     

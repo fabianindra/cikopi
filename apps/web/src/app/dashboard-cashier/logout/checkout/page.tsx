@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import { CheckOut } from '@/api/shift';
 import { jwtDecode } from 'jwt-decode';
 import { User } from '@/types'
+import Nav from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 
 const CheckOutPage = () => {
   const [cashAmount, setCashAmount] = useState('');
@@ -70,7 +72,9 @@ const CheckOutPage = () => {
   };
 
   return (
-    <Flex height="100vh" alignItems="center" justifyContent="center">
+    <Flex direction="column" minHeight="100vh">
+    <Nav />
+    <Flex height="70vh" alignItems="center" justifyContent="center">
       <Box p={4} maxWidth="300px" width="full" color="primary">
         <VStack spacing={3}>
           {error && <Text color="red.300" fontSize="xs">{error}</Text>}
@@ -93,6 +97,8 @@ const CheckOutPage = () => {
           </Button>
         </VStack>
       </Box>
+      </Flex>
+      <Footer />
     </Flex>
   );
 };

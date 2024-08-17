@@ -65,7 +65,7 @@ export const repoFindShift = async (shift_id: number) => {
     const shifts = await prisma.shift.findMany({
         where: {
             transaction: {
-                some: {
+                every: {
                     createdAt: {
                         gte: startOfDay,
                         lte: endOfDay,

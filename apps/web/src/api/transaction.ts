@@ -9,7 +9,7 @@ export function PaymentAPI(
 
 export function getTransactionByDate(date: string) {
     return axios.get(`${apiUrl}/transaction/get-by-date`, {
-      params: { date }
+      params: { date: date }
     });
   }
 
