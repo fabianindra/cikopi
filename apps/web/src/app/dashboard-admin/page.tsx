@@ -5,6 +5,7 @@ import TransactionReport from "@/components/dashboard-admin/TransactionReport";
 import ShiftReport from "@/components/dashboard-admin/ShiftReport";
 import ProductTransactionReport from "@/components/dashboard-admin/ProductReport";
 import CashCheck from "@/components/dashboard-admin/CashCheck";
+import TransactionList from "@/components/dashboard-admin/TransactionReportList";
 
 const DashboardAdmin = () => {
   return (
@@ -13,13 +14,20 @@ const DashboardAdmin = () => {
       <Box flex="1" p="10">
         <Tabs variant="soft-rounded">
           <TabList>
+            <Tab>Daily Report</Tab>
             <Tab>Shift Report</Tab>
-            <Tab>Transaction Report</Tab>
+            <Tab>Transaction Over Time</Tab>
             <Tab>Shift Cash Check</Tab>
             <Tab>Total Product Sales</Tab>
           </TabList>
 
           <TabPanels>
+            <TabPanel>
+              <Box p="4">
+                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Transaction Report</Text>
+                <TransactionList />
+              </Box>
+            </TabPanel>
             <TabPanel>
               <Box p="4">
                 <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Shift Report</Text>
@@ -28,7 +36,7 @@ const DashboardAdmin = () => {
             </TabPanel>
             <TabPanel>
               <Box p="4">
-                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Transaction Report</Text>
+                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Transaction Over Time</Text>
                 <TransactionReport />
               </Box>
             </TabPanel>

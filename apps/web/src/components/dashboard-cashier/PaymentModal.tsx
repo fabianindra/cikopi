@@ -1,16 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Flex, Text, Input, Radio, RadioGroup } from "@chakra-ui/react";
 import { PaymentModalProps } from "@/types";
 import { PaymentAPI } from "@/api/transaction";
+import { getDiscount } from "@/api/discount";
+import Cookies from "js-cookie";
+import { jwtDecode } from 'jwt-decode';
+
+const getCurrentDateInGMT7 = () => {
+    const now = new Date();
+    const offset = 7 * 60;
+    now.setMinutes(now.getMinutes() + now.getTimezoneOffset() + offset);
+    return now.toISOString().split('T')[0];
+};
 
 const PaymentModal = ({ isOpen, onClose, totalAmount, paymentType, setPaymentType, cashAmount, setCashAmount, transaction }: PaymentModalProps) => {
+    const [discount, setDiscount] = useState<number | null>(null);
 
     const taxRate = 0.1;
     const serviceRate = 0.05;
 
-    const calculateTax = () => totalAmount * taxRate;
-    const calculateServiceCharge = () => totalAmount * serviceRate;
-    const calculateGrandTotal = () => totalAmount + calculateTax() + calculateServiceCharge();
+    useEffect(() => {
+        if (isOpen) {
+            const fetchDiscount = async () => {
+                try {
+                    const today = getCurrentDateInGMT7();
+                    const response = await getDiscount(today);
+                    if (response.data) {
+                        setDiscount(response.data.result.discount_amount);
+                    }
+                } catch (error) {
+                    console.error('Error fetching discount:', error);
+                }
+            };
+            fetchDiscount();
+        }
+    }, [isOpen]);
+
+    const calculateDiscountedTotal = () => {
+        if (discount) {
+            return totalAmount * (1 - (discount / 100));
+        }
+        return totalAmount;
+    };
+
+    const calculateDiscountAmount = () => {
+        if (discount) {
+            return totalAmount * (discount / 100);
+        }
+        return totalAmount;
+    };
+
+    const calculateTax = () => calculateDiscountedTotal() * taxRate;
+    const calculateServiceCharge = () => calculateDiscountedTotal() * serviceRate;
+
+    const calculateGrandTotal = () => {
+        const discountedTotal = calculateDiscountedTotal();
+        return discountedTotal + calculateTax() + calculateServiceCharge();
+    };
+    
 
     const handlePaymentTypeChange = (type: string) => {
         setPaymentType(type);
@@ -34,37 +81,48 @@ const PaymentModal = ({ isOpen, onClose, totalAmount, paymentType, setPaymentTyp
 
     const handlePaymentConfirm = async () => {
         try {
-            const payload = {
-                products: transaction.map(product => ({
-                    product_id: product.id,
-                    quantity: product.quantity,
-                    final_price: product.price * (product.quantity || 1),
-                })),
-                transactionData: {
-                    sub_total: totalAmount,
-                    tax: calculateTax(),
-                    services: calculateServiceCharge(),
-                    grand_total: calculateGrandTotal(),
-                    payment_type: paymentType,
-                    change: calculateChange(),
-                    shift_id: 1, //dont forget to change this
+            const shiftToken = Cookies.get("shift");
+            if (shiftToken) {
+                let shiftId: number | undefined;
+
+                try {
+                    const decodedToken: any = jwtDecode(shiftToken);
+                    shiftId = decodedToken.shiftId;
+                } catch (error) {
+                    console.error("Failed to decode shift token:", error);
+                    return;
                 }
-            };
-            console.log(payload);
-            const response = await PaymentAPI(payload);
-            onClose();
-            window.location.href = "/dashboard-cashier/products";
+
+                if (shiftId === undefined) {
+                    console.error("Shift ID is undefined");
+                    return;
+                }
+
+                const payload = {
+                    products: transaction.map(product => ({
+                        product_id: product.id,
+                        quantity: product.quantity,
+                    })),
+                    shift_id: shiftId,
+                    payment_type: paymentType,
+                    payment: paymentType === 'cash' ? cashAmount : calculateGrandTotal(),
+                };
+
+                const response = await PaymentAPI(payload);
+                onClose();
+                window.location.href = "/dashboard-cashier/products";
+            }
         } catch (error: any) {
             if (error.response) {
-              console.error("Error response:", error.response.data);
+                console.error("Error response:", error.response.data);
             } else if (error.request) {
-              console.error("Error request:", error.request);
+                console.error("Error request:", error.request);
             } else {
-              console.error("Error message:", error.message);
+                console.error("Error message:", error.message);
             }
             console.error("Error config:", error.config);
-          }
-        };
+        }
+    };
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -96,6 +154,12 @@ const PaymentModal = ({ isOpen, onClose, totalAmount, paymentType, setPaymentTyp
                                 <Text>Service Charge (5%):</Text>
                                 <Text fontWeight="bold">Rp. {calculateServiceCharge().toLocaleString()}</Text>
                             </Flex>
+                            {discount && (
+                                <Flex justify="space-between" mt={2}>
+                                    <Text>Discount ({discount}%):</Text>
+                                    <Text fontWeight="bold">Rp. {(calculateDiscountAmount()).toLocaleString()}</Text>
+                                </Flex>
+                            )}
                             <Flex justify="space-between" mt={2}>
                                 <Text>Grand Total:</Text>
                                 <Text fontWeight="bold" color="red.500">Rp. {calculateGrandTotal().toLocaleString()}</Text>

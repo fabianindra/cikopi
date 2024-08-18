@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Button, HStack, Input, InputGroup, InputRightElement, Select, SimpleGrid, Table, Thead, Tbody, Tr, Th, Td, Modal,
-  ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, VStack, Divider, Flex
+  Box, Button, HStack, Input, InputGroup, InputRightElement, Select, SimpleGrid, Table, Thead, Tbody, Tr, Th, Td
 } from '@chakra-ui/react';
-import { MagnifyingGlass,SortAscending, SortDescending } from '@phosphor-icons/react/dist/ssr';
+import { MagnifyingGlass, SortAscending, SortDescending } from '@phosphor-icons/react/dist/ssr';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { getTransactionAdmin, getTransactionDetails } from '@/api/transaction';
+import { getTransactionAdmin } from '@/api/transaction';
+import TransactionDetailModal from './TransactionDetailsModalAdmin';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend );
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const TransactionReport = () => {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -19,7 +19,7 @@ const TransactionReport = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [category, setCategory] = useState<string>('');
-  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
+  const [selectedTransactionId, setSelectedTransactionId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -41,19 +41,21 @@ const TransactionReport = () => {
     );
   };
 
-  const handleTransactionClick = async (transactionId: number) => {
-    try {
-      const response = await getTransactionDetails(transactionId);
-      setSelectedTransaction(response.data.data);
-      setIsModalOpen(true);
-    } catch (err) {
-      console.error('Error fetching transaction details:', err);
-    }
+  const handleTransactionClick = (transactionId: number) => {
+    setSelectedTransactionId(transactionId);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedTransaction(null);
+    setSelectedTransactionId(null);
+  };
+
+  const formatToRupiah = (amount: number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(amount);
   };
 
   const chartData = {
@@ -163,7 +165,7 @@ const TransactionReport = () => {
                   cursor="pointer"
                   _hover={{ bg: 'gray.100' }}
                 >
-                  <Td fontSize="sm">{transaction.grand_total}</Td>
+                  <Td fontSize="sm">{formatToRupiah(transaction.grand_total)}</Td>
                   <Td fontSize="sm">{new Date(transaction.transaction_date).toLocaleDateString()}</Td>
                 </Tr>
               ))}
@@ -172,38 +174,11 @@ const TransactionReport = () => {
         </Box>
       </SimpleGrid>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ModalOverlay />
-        <ModalContent maxWidth="sm" mx={4}>
-          <ModalCloseButton />
-          <ModalBody>
-            {selectedTransaction ? (
-              <VStack spacing={4} align="stretch">
-                <Text fontWeight="bold" fontSize="lg" textAlign="center" mt={10}>Transaction Details</Text>
-                <Divider />
-                {selectedTransaction.map((item: any) => (
-                  <Flex key={item.id} justify="space-between">
-                    <Box>
-                      <Text fontSize="md">{item.quantity} x</Text>
-                      <Text fontSize="md">{new Date(item.createdAt).toLocaleString()}</Text>
-                    </Box>
-                    <Text fontSize="md">Rp. {item.final_price}</Text>
-                  </Flex>
-                ))}
-                <Divider />
-                <Text fontWeight="bold" fontSize="md" textAlign="right">
-                  Total: Rp. {selectedTransaction.reduce((acc: number, item: any) => acc + item.final_price, 0)}
-                </Text>
-              </VStack>
-            ) : (
-              <Text>Loading...</Text>
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button bgColor="tertiary" onClick={closeModal}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <TransactionDetailModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        transactionId={selectedTransactionId}
+      />
     </Box>
   );
 };

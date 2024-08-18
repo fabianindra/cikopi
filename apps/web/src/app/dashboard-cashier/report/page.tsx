@@ -1,15 +1,20 @@
 'use client'
 
-import { Box, Heading, Flex, Text, Spinner, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, Divider } from "@chakra-ui/react";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
 import Sidebar from "@/components/dashboard-cashier/Sidebar";
 import { useEffect, useState } from "react";
-import { getTransactionByDate, getTransactionDetails } from "@/api/transaction";
+import { getTransactionByDate, getTransactionByDateById } from "@/api/transaction";
+import TransactionList from "@/components/dashboard-cashier/TransactionList";
+import TotalDisplay from "@/components/dashboard-cashier/TotalDisplay";
+import TransactionDetailModal from "@/components/dashboard-cashier/TransactionDetailsModal";
+import { Transaction } from "@/types";
+import Cookies from "js-cookie";
 
 const Report = () => {
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
+  const [selectedTransactionId, setSelectedTransactionId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalDailyTransaction, setTotalDailyTransaction] = useState<number>(0);
 
@@ -22,15 +27,18 @@ const Report = () => {
         date.setHours(date.getHours() + (gmtPlus7Offset - currentTimezoneOffsetInHours));
         const adjustedDate = date.toISOString().split("T")[0];
 
-        const response = await getTransactionByDate(adjustedDate);
-        
-        const fetchedTransactions = response.data.data;
 
-        setTransactions(fetchedTransactions);
-        setTotalDailyTransaction(
-          fetchedTransactions.reduce((acc: number, transaction: any) => acc + transaction.grand_total, 0)
-        );
-        setLoading(false);
+        const token = Cookies.get("token")
+        if (token) {
+          const response = await getTransactionByDateById(adjustedDate, token);
+          const fetchedTransactions = response.data.data;
+
+          setTransactions(fetchedTransactions);
+          setTotalDailyTransaction(
+            fetchedTransactions.reduce((acc: number, transaction: Transaction) => acc + transaction.grand_total, 0)
+          );
+          setLoading(false);
+        }
       } catch (err: any) {
         setError(err.message);
         setLoading(false);
@@ -40,19 +48,14 @@ const Report = () => {
     fetchTransactions();
   }, []);
 
-  const handleTransactionClick = async (transactionId: number) => {
-    try {
-      const response = await getTransactionDetails(transactionId);
-      setSelectedTransaction(response.data.data);
-      setIsModalOpen(true);
-    } catch (err: any) {
-      setError(err.message);
-    }
+  const handleTransactionClick = (transactionId: number) => {
+    setSelectedTransactionId(transactionId);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedTransaction(null);
+    setSelectedTransactionId(null);
   };
 
   if (loading) {
@@ -76,71 +79,14 @@ const Report = () => {
   return (
     <Flex height="100vh">
       <Sidebar />
-      <Box flex="3" p={20} bg="none">
-        <Heading mb={6}>Transaction Report</Heading>
-        <VStack spacing={4} align="stretch">
-          {transactions.length > 0 ? (
-            transactions.map((transaction) => (
-              <Box
-                key={transaction.id}
-                p={4}
-                borderWidth="1px"
-                borderRadius="md"
-                bg="white"
-                boxShadow="sm"
-                cursor="pointer"
-                _hover={{ bg: "gray.100" }}
-                onClick={() => handleTransactionClick(transaction.id)}
-              >
-                <Text fontWeight="bold">{new Date(transaction.createdAt).toLocaleString()}</Text>
-                <Text>Amount: Rp. {transaction.grand_total}</Text>
-                <Text color="gray.500" fontSize="sm">Click for details</Text>
-              </Box>
-            ))
-          ) : (
-            <Text>No transactions today.</Text>
-          )}
-        </VStack>
-      </Box>
-      <Box flex={1} p={20} bg="tertiary">
-        <Text fontSize="xl" fontWeight="bold">Total Daily Transaction</Text>
-        <Text fontSize="4xl" mt={4}>Rp. {totalDailyTransaction.toLocaleString()}</Text>
-      </Box>
+      <TransactionList transactions={transactions} onTransactionClick={handleTransactionClick} />
+      <TotalDisplay totalDailyTransaction={totalDailyTransaction} />
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ModalOverlay />
-        <ModalContent maxWidth="sm" mx={4}>
-          <ModalHeader>Transaction Details</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {selectedTransaction ? (
-              <VStack spacing={4} align="stretch">
-                <Text fontWeight="bold" fontSize="lg" textAlign="center">Receipt</Text>
-                <Divider />
-                {selectedTransaction.map((item: any) => (
-                  <Flex key={item.id} justify="space-between">
-                    <Box>
-                      <Text fontSize="md">{item.quantity} x</Text>
-                      <Text fontSize="md">{new Date(item.createdAt).toLocaleString()}</Text>
-                    </Box>
-                    <Text fontSize="md">Rp. {item.final_price}</Text>
-                  </Flex>
-                ))}
-                <Divider />
-                <Text fontWeight="bold" fontSize="md" textAlign="right">
-                  Total: Rp. {selectedTransaction.reduce((acc: number, item: any) => acc + item.final_price, 0)}
-                </Text>
-              </VStack>
-            ) : (
-              <Text>Loading...</Text>
-            )}
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={closeModal}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <TransactionDetailModal 
+        isOpen={isModalOpen} 
+        onClose={closeModal} 
+        transactionId={selectedTransactionId} 
+      />
     </Flex>
   );
 };

@@ -1,15 +1,22 @@
 import axios from 'axios';
 import { apiUrl } from './index';
 
-export function PaymentAPI(
-    payload: any
-) {
+export function PaymentAPI(payload: any) {
   return axios.post(`${apiUrl}/transaction/payment`, payload);
 }
 
 export function getTransactionByDate(date: string) {
     return axios.get(`${apiUrl}/transaction/get-by-date`, {
       params: { date: date }
+    });
+  }
+
+  export function getTransactionByDateById(date: string, token: string) {
+    return axios.get(`${apiUrl}/transaction/get-by-date-by-id`, {
+      params: { date },
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     });
   }
 

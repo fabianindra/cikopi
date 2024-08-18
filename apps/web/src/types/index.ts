@@ -146,3 +146,28 @@ export interface EditProductModalProps {
   product: Product | null;
   onSave: (updatedProduct: Product) => void;
 }
+
+export interface Transaction {
+  sub_total: number;           
+  tax: number;                 
+  services: number;         
+  grand_total: number;        
+  payment_type: string;       
+  change: number;              
+  transaction_date: string;      
+  createdAt: Date;            
+  updatedAt: Date;            
+}
+
+
+export interface TransactionUnit {
+  id: number;
+  price: number;
+  quantity: string;
+  final_price: number;
+  createdAt: string;
+  updatedAt: string;
+  product_id: number;
+  transaction_id: number;
+}
+

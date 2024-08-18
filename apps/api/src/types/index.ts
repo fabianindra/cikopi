@@ -45,17 +45,11 @@ export interface AddProductRequest {
       product_id: number;
       quantity: number;
     }[];
-    transactionData: {
-      sub_total: number;
-      tax: number;
-      services: number;
-      grand_total: number;
-      payment_type: string;
-      change: number;
-      shift_id: number;
-      discount_id?: number;
-    };
+    shift_id: number;
+    payment_type: string;
+    payment: number;
   }
+  
 
   export type EditProductRequest = {
     product_name?: string;
@@ -74,4 +68,3 @@ export interface AddProductRequest {
       user?: string | JwtPayload;
     }
   }
-  

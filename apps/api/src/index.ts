@@ -9,6 +9,7 @@ import transactionRouter from './routers/transaction.router';
 import shiftRouter from './routers/shift.router';
 import cashierRouter from './routers/cashier.router';
 import routerProtect from './routers/protected.router';
+import discountRouter from './routers/discount.router';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api/transaction', transactionRouter);
 app.use('/api/shift', shiftRouter);
 app.use('/api/cashier', cashierRouter);
 app.use('/api/protected', routerProtect);
+app.use('/api/discount', discountRouter);
 
 const PORT = process.env.PORT || 6570;
 
