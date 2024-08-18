@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { fetchProducts, deleteProduct } from "@/api/product"; // Ensure deleteProduct is imported
+import { fetchProducts, deleteProduct } from "@/api/product";
 import { Box, Button, Flex, Text, Input, Select, Table, Thead, Tbody, Tr, Th, Td, Image } from '@chakra-ui/react';
 import { Product } from '@/types';
 import { imageUrl } from '@/api/index';
@@ -161,7 +161,7 @@ const ProductListAdmin = () => {
                                         bgColor="maroon"
                                         color="travertine"
                                         size="sm"
-                                        onClick={() => handleDeleteProduct(product.id)} // Call the delete function
+                                        onClick={() => handleDeleteProduct(product.id)}
                                     >
                                         Delete
                                     </Button>

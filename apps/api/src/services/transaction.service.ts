@@ -28,7 +28,6 @@ export const serviceSubTotal = async (request: SubTotalRequest) => {
   }
 };
 
-
 export const serviceGetTransactionByDate = async (date: Date) => {
     try {
       const transactions = await repoGetTransactionByDate(date);
@@ -95,8 +94,6 @@ export const serviceGetTransactionByDate = async (date: Date) => {
       };
     }
   };
-  
-
 
   export const serviceGetTransactionDetails = async (transactionId : number) => {
     try {

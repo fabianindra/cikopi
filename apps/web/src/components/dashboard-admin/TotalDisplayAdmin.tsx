@@ -1,13 +1,11 @@
-// TotalDisplayAdmin.tsx
 import React from 'react';
 import { Box, Text } from "@chakra-ui/react";
 
 interface TotalDisplayAdminProps {
-  totalDailyTransaction: number; // Define the type for totalDailyTransaction
+  totalDailyTransaction: number;
 }
 
 const TotalDisplayAdmin: React.FC<TotalDisplayAdminProps> = ({ totalDailyTransaction }) => {
-  // Ensure totalDailyTransaction is a valid number, fallback to 0 if undefined
   const formattedTotal = totalDailyTransaction.toLocaleString();
 
   return (

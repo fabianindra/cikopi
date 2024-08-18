@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { serviceAddDiscount, serviceGetDiscount } from "@/services/discount.service";
+import { serviceAddDiscount, serviceGetAllDiscounts, serviceGetDiscount } from "@/services/discount.service";
 
 export const addDiscount = async (req: Request, res: Response) => {
   try {
@@ -55,6 +55,27 @@ export const getDiscount = async (req: Request, res: Response) => {
           message: 'No discount found for the specified date',
         });
       }
+  
+      return res.status(200).send({
+        status: 200,
+        success: true,
+        message: 'Discount retrieved successfully',
+        result: discount,
+      });
+    } catch (error) {
+      console.error('Error retrieving discount:', error);
+      return res.status(500).send({
+        status: 500,
+        success: false,
+        message: 'Internal server error',
+        error: (error as Error).message,
+      });
+    }
+  };
+
+  export const getAllDiscounts = async (req: Request, res: Response) => {
+    try {
+      const discount = await serviceGetAllDiscounts();
   
       return res.status(200).send({
         status: 200,

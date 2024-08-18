@@ -12,12 +12,9 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const secret = process.env.JWT_SECRET!;
     const decoded = verify(token.replace('Bearer ', ''), secret);
     req.user = decoded;
-
-    console.log('Decoded token:', decoded);  // Debugging log
-
     next();
   } catch (error) {
-    console.error('Token verification failed:', error);  // Debugging log
+    console.error('Token verification failed:', error);
     return res.status(401).json({ success: false, message: 'Failed to authenticate token.' });
   }
 };

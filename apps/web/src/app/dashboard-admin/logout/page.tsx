@@ -3,7 +3,6 @@ import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
 import Cookies from "js-cookie";
 
-
 const Logout = () => {
     const handleLogout = () => {
         Cookies.remove('token');

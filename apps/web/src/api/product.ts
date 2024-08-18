@@ -17,7 +17,7 @@ export function addProduct(formData: FormData) {
     });
   }
 
-  export function editProduct(productId: number, formData: FormData) {
+export function editProduct(productId: number, formData: FormData) {
     return axios.post(`${apiUrl}/product/edit-product/${productId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -25,6 +25,6 @@ export function addProduct(formData: FormData) {
     });
   }
 
-  export function deleteProduct(productId: number) {
+export function deleteProduct(productId: number) {
     return axios.post(`${apiUrl}/product/delete-product`, {productId});
   }

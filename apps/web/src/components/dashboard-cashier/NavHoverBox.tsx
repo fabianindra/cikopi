@@ -7,8 +7,6 @@ import {
 } from '@chakra-ui/react';
 import { NavHoverBoxProps } from '@/types'
 
-
-
 const NavHoverBox: React.FC<NavHoverBoxProps> = ({ title, icon, description }) => {
   return (
     <>

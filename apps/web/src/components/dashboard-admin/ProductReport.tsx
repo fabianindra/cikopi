@@ -58,7 +58,6 @@ const ProductTransactionReport: React.FC = () => {
     }
   };
 
-  // Format currency in Rupiah
   const formatRupiah = (amount: number) => {
     return amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
   };

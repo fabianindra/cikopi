@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { FiMenu, FiHome, FiShoppingCart, FiClipboard, FiLogOut } from 'react-icons/fi';
 import NavItem from './NavItem';
 import { User } from '@/types';
-import Cookies from 'js-cookie';
 
 const Sidebar: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);

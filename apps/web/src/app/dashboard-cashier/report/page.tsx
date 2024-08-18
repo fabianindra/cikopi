@@ -3,7 +3,7 @@
 import { Flex, Spinner, Text } from "@chakra-ui/react";
 import Sidebar from "@/components/dashboard-cashier/Sidebar";
 import { useEffect, useState } from "react";
-import { getTransactionByDate, getTransactionByDateById } from "@/api/transaction";
+import { getTransactionByDateById } from "@/api/transaction";
 import TransactionList from "@/components/dashboard-cashier/TransactionList";
 import TotalDisplay from "@/components/dashboard-cashier/TotalDisplay";
 import TransactionDetailModal from "@/components/dashboard-cashier/TransactionDetailsModal";

@@ -15,7 +15,7 @@ export function CheckOut( cashAmount: string, userId: number, shiftId: number ) 
     return axios.post(`${apiUrl}/shift/checkout`, { cashAmount, userId, shiftId });
   }
   
-  export function getShiftReport(startDate: string, endDate: string) {
+export function getShiftReport(startDate: string, endDate: string) {
     return axios.get(`${apiUrl}/shift/get-report`, {
       params: {
         startDate,
@@ -24,7 +24,7 @@ export function CheckOut( cashAmount: string, userId: number, shiftId: number ) 
     });
   }
   
-  export function getCashCheck(date: string) {
+export function getCashCheck(date: string) {
     return axios.get(`${apiUrl}/shift/cash-check`, {
       params: { date: date }
     });

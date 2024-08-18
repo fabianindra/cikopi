@@ -30,3 +30,8 @@ export const repoAddDiscount = async (startDate: Date, endDate: Date, value: num
       throw error;
     }
   };
+
+  export const repoGetAllDiscounts = async () => {
+    return await prisma.discount.findMany();
+  };
+  

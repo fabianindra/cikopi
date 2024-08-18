@@ -4,7 +4,6 @@ import { Box, Text, Input, Button, FormControl, FormLabel, VStack, Flex } from "
 import Cookies from 'js-cookie';
 import { CheckOut } from '@/api/shift';
 import { jwtDecode } from 'jwt-decode';
-import { User } from '@/types'
 import Nav from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 
@@ -15,10 +14,6 @@ const CheckOutPage = () => {
   const [shiftId, setShiftId] = useState<number | null>(null);
   const token = Cookies.get('token');
   const shift = Cookies.get('shift');
-
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
-
 
   useEffect(() => {
     if (token) {
@@ -57,8 +52,6 @@ const CheckOutPage = () => {
 
         if (response.status === 201) {
             Cookies.remove('token');
-            setLoggedIn(false);
-            setUser(null);
             window.location.href = '/';
         } else {
           setError('Failed to submit cash amount');

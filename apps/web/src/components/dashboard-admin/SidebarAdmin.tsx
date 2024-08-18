@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Flex, IconButton, Divider } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
-import { FiMenu, FiHome, FiShoppingCart, FiClipboard, FiLogOut } from 'react-icons/fi';
+import { FiMenu, FiHome, FiShoppingCart, FiClipboard, FiLogOut, FiPercent } from 'react-icons/fi';
 import NavItem from './NavItemAdmin';
 import { User } from '@/types';
 import Cookies from 'js-cookie';
@@ -76,6 +76,7 @@ const SidebarAdmin: React.FC = () => {
         <NavItem navSize={navSize} icon={FiHome} title="Dashboard" description="Admin" {...getNavItemProps('/dashboard-admin')} />
         <NavItem navSize={navSize} icon={FiShoppingCart} title="Products" {...getNavItemProps('/dashboard-admin/product-list')} />
         <NavItem navSize={navSize} icon={FiClipboard} title="Cashier" {...getNavItemProps('/dashboard-admin/cashier-management')} />
+        <NavItem navSize={navSize} icon={FiPercent} title="Discount" {...getNavItemProps('/dashboard-admin/discount')} />
         <NavItem
           navSize={navSize}
           icon={FiLogOut}

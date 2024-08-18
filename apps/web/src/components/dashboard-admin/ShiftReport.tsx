@@ -36,12 +36,10 @@ const ShiftReport: React.FC = () => {
     fetchReport();
   };
 
-  // Format currency in Rupiah
   const formatRupiah = (amount: number) => {
     return amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
   };
 
-  // Format date
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -53,7 +51,6 @@ const ShiftReport: React.FC = () => {
     return new Date(dateString).toLocaleDateString('id-ID', options);
   };
 
-  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = reportData.slice(indexOfFirstItem, indexOfLastItem);

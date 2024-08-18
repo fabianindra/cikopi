@@ -1,4 +1,4 @@
-import { Box, Heading, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import SidebarAdmin from "@/components/dashboard-admin/SidebarAdmin";
 import ProductListAdmin from "@/components/dashboard-admin/ProductListAdmin";
 import AddProductForm from "@/components/dashboard-admin/AddProductForm";

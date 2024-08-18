@@ -36,6 +36,7 @@ export interface User {
     active?: boolean;
     navSize: 'small' | 'large';
     onClick?: () => void; 
+    href?: string;
   }
 
   export interface Product {
@@ -44,7 +45,7 @@ export interface User {
     price: number;
     image: string;
     category: string;
-    stock: number;
+    stock?: number;
     partner?: string;
     consignment_fee?: number;
 }
@@ -159,7 +160,6 @@ export interface Transaction {
   updatedAt: Date;            
 }
 
-
 export interface TransactionUnit {
   id: number;
   price: number;
@@ -169,5 +169,39 @@ export interface TransactionUnit {
   updatedAt: string;
   product_id: number;
   transaction_id: number;
+}
+
+export interface Discount {
+  id: number;
+  discount_amount: number;
+  start_date: string;
+  end_date: string;
+}
+
+export interface TransactionUnitWithProduct {
+  id: number;
+  price: number;
+  quantity: string; 
+  final_price: number;
+  createdAt: string;
+  updatedAt: string;
+  product: Product;
+}
+
+export interface TransactionDetails {
+  sub_total: number;
+  tax: number;
+  services: number;
+  grand_total: number;
+  payment_type: string;
+  transaction_date: string;
+  discount_amount?: number;
+  transaction_unit: TransactionUnitWithProduct[] | undefined; 
+}
+
+export interface TransactionDetailModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  transactionId: number | null; 
 }
 

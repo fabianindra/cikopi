@@ -1,4 +1,4 @@
-import { repoAddDiscount, repoGetDiscount } from "@/repositories/discount.repository";
+import { repoAddDiscount, repoGetAllDiscounts, repoGetDiscount } from "@/repositories/discount.repository";
 
 export const serviceAddDiscount = async ({
     startDate,
@@ -26,6 +26,16 @@ export const serviceAddDiscount = async ({
     try {
       const date = new Date(dateString);
       const discount = await repoGetDiscount(date);
+      return discount;
+    } catch (error) {
+      console.error('Error retrieving discount:', error);
+      throw error;
+    }
+  };
+
+  export const serviceGetAllDiscounts = async () => {
+    try {
+      const discount = await repoGetAllDiscounts();
       return discount;
     } catch (error) {
       console.error('Error retrieving discount:', error);

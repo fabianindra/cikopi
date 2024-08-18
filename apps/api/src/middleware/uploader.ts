@@ -1,18 +1,16 @@
 import multer from 'multer';
 import path from 'path';
 
-// Set storage engine
 const storage = multer.diskStorage({
-    destination: path.join(__dirname, '../../public/images'), // Adjust this path according to your directory structure
+    destination: path.join(__dirname, '../../public/images'),
     filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`); // Unique filename
+      cb(null, `${Date.now()}-${file.originalname}`);
     },
   });
 
-// Initialize upload
 export const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const fileTypes = /jpeg|jpg|png/;
     const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());

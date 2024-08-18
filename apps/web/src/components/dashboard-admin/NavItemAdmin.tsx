@@ -1,16 +1,7 @@
 import React from 'react';
 import { Flex, Text, Icon } from '@chakra-ui/react';
 import NextLink from 'next/link';
-
-interface NavItemProps {
-  navSize: 'small' | 'large';
-  icon: React.ElementType;
-  title: string;
-  description?: string;
-  active?: boolean;
-  onClick?: () => void;
-  href?: string;
-}
+import { NavItemProps } from '@/types';
 
 const NavItem: React.FC<NavItemProps> = ({ navSize, icon, title, description, active, href, onClick }) => {
   const IconComponent = icon;

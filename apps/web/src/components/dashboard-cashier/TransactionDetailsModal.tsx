@@ -1,37 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, VStack, Text, Divider, Flex, Box } from "@chakra-ui/react";
 import { getTransactionDetails } from "@/api/transaction";
-
-interface Product {
-  product_name: string;
-}
-
-interface TransactionUnitWithProduct {
-  id: number;
-  price: number;
-  quantity: string; 
-  final_price: number;
-  createdAt: string;
-  updatedAt: string;
-  product: Product;
-}
-
-interface TransactionDetails {
-  sub_total: number;
-  tax: number;
-  services: number;
-  grand_total: number;
-  payment_type: string;
-  transaction_date: string;
-  discount_amount?: number;
-  transaction_unit: TransactionUnitWithProduct[] | undefined; 
-}
-
-interface TransactionDetailModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  transactionId: number | null; 
-}
+import { TransactionUnitWithProduct, TransactionDetails, TransactionDetailModalProps } from "@/types";
 
 const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({ isOpen, onClose, transactionId }) => {
   const [transaction, setTransaction] = useState<TransactionDetails | null>(null);

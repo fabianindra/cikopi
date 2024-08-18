@@ -10,10 +10,10 @@ export function addCashier(username: string, password: string) {
     return axios.post(`${apiUrl}/cashier/add-cashiers`, {username, password});
   }
   
-  export function editCashier(userId: string, username: string, password: string) {
+export function editCashier(userId: string, username: string, password: string) {
     return axios.post(`${apiUrl}/cashier/edit-cashier`, {userId, username, password});
   }
 
-  export function deleteCashier(userId: string) {
+export function deleteCashier(userId: string) {
     return axios.post(`${apiUrl}/cashier/delete-cashier`, {userId});
   }

@@ -168,13 +168,10 @@ export const repoGetTransactionByDate = async (date: Date) => {
         },
       },
     });
-  
     if (!transaction) {
       throw new Error(`Transaction with ID ${transactionId} not found`);
     }
-  
     let discountAmount = 0;
-  
     if (transaction.discount_id) {
       const discount = await prisma.discount.findUnique({
         where: {
@@ -184,12 +181,10 @@ export const repoGetTransactionByDate = async (date: Date) => {
           discount_amount: true,
         },
       });
-  
       if (discount) {
         discountAmount = Math.round(transaction.sub_total * (discount.discount_amount / 100));
       }
     }
-
     return {
       ...transaction,
       discount_amount: discountAmount,
