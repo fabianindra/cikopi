@@ -86,6 +86,8 @@ const ProductTransactionReport: React.FC = () => {
                 <Th>Total Quantity</Th>
                 <Th>Total Transactions</Th>
                 <Th>Total Amount</Th>
+                <Th>Consignment Fee</Th>
+                <Th>Partner</Th>
               </Tr>
             </Thead>
             <Tbody fontSize="xs">
@@ -95,6 +97,8 @@ const ProductTransactionReport: React.FC = () => {
                   <Td>{item.total_quantity}</Td>
                   <Td>{item.total_transaction}</Td>
                   <Td>{formatRupiah(item.total_amount)}</Td>
+                  <Td>{formatRupiah(item.consignment_fee)}</Td>
+                  <Td>{item.partner}</Td>
                 </Tr>
               ))}
             </Tbody>

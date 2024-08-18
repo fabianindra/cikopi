@@ -65,6 +65,14 @@ const CheckInPage = () => {
     }
   };
 
+  const handleCancelLogin = () => {
+    const confirmation = window.confirm("Are you sure you want to cancel?");
+    if (confirmation) {
+      Cookies.remove('token');
+      window.location.href = '/';
+    }
+  };
+
   return (
     <Flex direction="column" minHeight="100vh">
       <Nav />
@@ -88,6 +96,9 @@ const CheckInPage = () => {
             </FormControl>
             <Button mt={6} fontSize="xs" width="full" bgColor="tertiary" onClick={handleCashAmountSubmit}>
               Submit
+            </Button>
+            <Button mt={6} fontSize="xs" width="full" bgColor="secondary" onClick={handleCancelLogin}>
+              Cancel
             </Button>
           </VStack>
         </Box>

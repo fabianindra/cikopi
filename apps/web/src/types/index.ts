@@ -130,6 +130,8 @@ export interface ProductData {
   total_quantity: number;
   total_transaction: number;
   total_amount: number;
+  partner: string;
+  consignment_fee: number;
 }
 
 export interface ShiftData {

@@ -6,11 +6,21 @@ import { ShiftReportData } from '@/types';
 import { getShiftReport } from '@/api/shift';
 
 const ShiftReport: React.FC = () => {
+
+  const getYesterday = () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday.toISOString().split('T')[0];
+  };
+  const getToday = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+
   const [reportData, setReportData] = useState<ShiftReportData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState<string>('2024-01-01');
-  const [endDate, setEndDate] = useState<string>('2024-12-31');
+  const [startDate, setStartDate] = useState<string>(getYesterday());
+  const [endDate, setEndDate] = useState<string>(getToday());
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(4);
 
@@ -20,7 +30,12 @@ const ShiftReport: React.FC = () => {
 
     try {
       const response = await getShiftReport(startDate, endDate);
-      setReportData(response.data.data);
+
+      const sortedData = response.data.data.sort((a: ShiftReportData, b: ShiftReportData) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+
+      setReportData(sortedData);
     } catch (err) {
       setError('Failed to fetch shift report');
     } finally {

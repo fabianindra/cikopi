@@ -1,4 +1,5 @@
-import { repoGetTransactionAdmin, repoGetTransactionByDate, repoGetTransactionByDateById, repoGetTransactionByProductByDate, repoGetTransactionDetails, repoSubTotal } from "@/repositories/transaction.repository";
+import { repoGetTransactionByProductByDate } from "@/repositories/consignment.repository";
+import { repoGetTransactionAdmin, repoGetTransactionByDate, repoGetTransactionByDateById, repoGetTransactionDetails, repoSubTotal } from "@/repositories/transaction.repository";
 import { SubTotalRequest } from "@/types";
 import { verify } from 'jsonwebtoken';
 

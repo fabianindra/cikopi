@@ -18,7 +18,7 @@ const DashboardAdmin = () => {
             <Tab>Shift Report</Tab>
             <Tab>Transaction Over Time</Tab>
             <Tab>Shift Cash Check</Tab>
-            <Tab>Total Product Sales</Tab>
+            <Tab>Product & Consignment</Tab>
           </TabList>
 
           <TabPanels>
@@ -48,7 +48,7 @@ const DashboardAdmin = () => {
             </TabPanel>
             <TabPanel>
               <Box p="4">
-                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Total Product Sales</Text>
+                <Text mb={2} color="black" textAlign="center" bgColor="tertiary">Product & Consignment</Text>
                 <ProductTransactionReport />
               </Box>
             </TabPanel>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Button, HStack, Input, InputGroup, InputRightElement, Select, SimpleGrid, Table, Thead, Tbody, Tr, Th, Td
+  Box, Button, HStack, Input, InputGroup, InputRightElement, Select, SimpleGrid, Table, Thead, Tbody, Tr, Th, Td, Text
 } from '@chakra-ui/react';
 import { MagnifyingGlass, SortAscending, SortDescending } from '@phosphor-icons/react/dist/ssr';
 import { Line } from 'react-chartjs-2';
@@ -21,6 +21,8 @@ const TransactionReport = () => {
   const [category, setCategory] = useState<string>('');
   const [selectedTransactionId, setSelectedTransactionId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [entriesPerPage] = useState<number>(8);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -93,6 +95,11 @@ const TransactionReport = () => {
       },
     },
   };
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentEntries = transactions.slice(indexOfFirstEntry, indexOfLastEntry);
+
+  const totalPages = Math.ceil(transactions.length / entriesPerPage);
 
   return (
     <Box mb={5} p={3} fontSize="sm">
@@ -158,7 +165,7 @@ const TransactionReport = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {transactions.map((transaction) => (
+              {currentEntries.map((transaction) => (
                 <Tr
                   key={transaction.id}
                   onClick={() => handleTransactionClick(transaction.id)}
@@ -171,6 +178,25 @@ const TransactionReport = () => {
               ))}
             </Tbody>
           </Table>
+          <HStack justifyContent="center" mt={4}>
+            <Button
+              size="sm"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              isDisabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <Text fontSize="sm">
+              Page {currentPage} of {totalPages}
+            </Text>
+            <Button
+              size="sm"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              isDisabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </HStack>
         </Box>
       </SimpleGrid>
 
